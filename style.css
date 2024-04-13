@@ -1,0 +1,111 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+.container {
+    text-align: center;
+}
+
+.game-image {
+    max-width: 30%;
+    height: auto;
+}
+@media (max-width: 600px) {
+    .game-image {
+        max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
+    }
+}
+
+
+#startGame {
+    background-color: #4CAF50; 
+    color: white;
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 20px auto;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button {
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 20px auto;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+
+/* 房號彈跳視窗 */
+.popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 450px;
+    text-align: center;
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 請輸入房號及暱稱的設定 */
+.input-group label {
+    margin-right: 10px; 
+    white-space: nowrap; 
+    min-width: 50px; 
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    margin: 10px 0;
+}
+
+.input-group input, .input-group label {
+    font-size: 18px;
+    display: block;
+}
+
+.input-group input {
+    flex-grow: 1; 
+    padding: 10px;
+    width: 80%;
+    max-width: 300px;
+}
+

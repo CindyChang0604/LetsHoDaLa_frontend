@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HoDaLa DrinkingGame</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <img src="beergame.png" alt="Game Image" class="game-image">
+        <h1>HoDaLa</h1>
+        <button id="startGame">發起遊戲</button>
+        <button id="enterRoom">輸入房號</button>
+    </div>
+    <div id="popup_start" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <p id="roomIdDisplay" style="text-align: center;"> 房號是：1234567890</p>
+            <button id="copyRoomId">複製房號</button>
+            <button id="sendRoomId">發送房號</button>
+        </div>
+    </div>
+
+    <div id="popup_room" class="popup" style="display: none;">
+        <div class="popup-content">
+            <span class="close-btn">&times;</span>
+            <p style="text-align: center; font-size: 20px;">請輸入房號及暱稱</p>
+            <div class="input-group">
+                <label for="room_id" style="margin-right: 10px;">房號：</label>
+                <input type="text" id="room_id" name="room_id" placeholder="請輸入10碼數字">
+            </div>
+            <div class="input-group">
+                <label for="nickname" style="margin-right: 10px;">暱稱：</label>
+                <input type="text" id="nickname" name="nickname" placeholder="請輸入暱稱">
+            </div>
+            <button id="send_room_id">送出</button>
+        </div>
+    </div>
+    
+
+    <script src="script.js"></script>
+</body>
+</html>
