@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>請選擇遊戲</title>
+    <script src="js\socket.io.js"></script>
+    <script>
+        
+        window.onload = function() {
+            const socket = io('http://localhost:3000');
+            const username = localStorage.getItem('username');
+            const room = localStorage.getItem('room');
+            const isHost = localStorage.getItem('isHost') === 'true';
+            
+    
+            socket.emit('joinRoom', room, username, isHost)
+            // 假設房間人數（需要從服務器獲取）
+            socket.on('roomData', (data) => {
+                document.getElementById('user-info').textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`
+            });
+
+            if (room) {
+                socket.emit('getRoomHost', room);
+            }
+        
+            socket.on('roomHostInfo', (data) => {
+                console.log('房间:', data.room, '房长ID:', data.hostId);
+                // 根据房长ID调整UI，例如显示或隐藏特定控件
+                if (!(username === data.hostId)) {
+                    document.querySelectorAll('.game').forEach(game => {
+                        game.style.pointerEvents = 'none'; // 禁用點擊事件
+                        game.style.opacity = '0.6'; // 讓元素看起來不可點擊
+                    })
+                }
+            });
+            
+            document.getElementById('goldenfinger').addEventListener('click', function() {
+                socket.emit('requestNavigate', { room: room, target: 'goldenfinger.html' });
+            });
+    
+            socket.on('navigate', (target) => {
+                
+                localStorage.setItem('roomname', room);
+                localStorage.setItem('client', username);
+                localStorage.setItem('IsHost', isHost);
+                window.location.href = target;
+            });
+        }
+
+
+    </script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-height: 100vh;
+            justify-content: center;
+            background-color: #f7f7f7;
+            font-family: 'Arial', sans-serif;
+        }
+
+        h1 {
+            background-color: #ff6347; /* 浅红色背景 */
+            color: white; /* 文字颜色 */
+            padding: 10px 20px;
+            border-radius: 20px; /* 圆角 */
+            width: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+            margin: 20px 0;
+        }
+
+        h2 {
+            background-color: white; /* 浅红色背景 */
+            color: #ff6347; /* 文字颜色 */
+            border-color: #ff6347;
+            padding: 10px 20px;
+            border-radius: 20px; /* 圆角 */
+            width: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 轻微阴影 */
+            margin: 20px 0;
+        }
+
+        .game-section {
+            display: flex;
+            justify-content: center; /* 水平居中 */
+            margin-bottom: 20px; /* 每个部分之间的间隔 */
+            flex-wrap: wrap; /* 自动换行 */
+        }
+
+        .game {
+            margin: 0 15px; /* 游戏之间的间隔 */
+            background-color: #ffffff; /* 白色背景 */
+            padding: 10px;
+            border-radius: 10px; /* 圆角 */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* 阴影效果 */
+            transition: transform 0.3s ease; /* 平滑过渡效果 */
+        }
+
+        .game:hover {
+            transform: translateY(5px); /* 向上移动5px */
+        }
+
+        .game img {
+            width: 120px;  
+            height: 120px; 
+            object-fit: cover;
+            border-radius: 8px; /* 图片圆角 */
+        }
+
+        .game p {
+            margin-top: 8px;
+            font-size: 18px;
+            color: #333; /* 字体颜色 */
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 16px;"></div>
+    <h1>請選擇遊戲</h1>
+    
+    <section>
+        <h2>快醉程度：高</h2>
+        <div class="game-section">
+            <div class="game">
+                <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
+                <p>金手指</p>
+            </div>
+            <div class="game">
+                <img src="images\comingsoon.png" alt="finalpassword">
+                <p>終極密碼</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>快醉程度：中</h2>
+        <div class="game-section">
+            <div class="game">
+                <img src="images\comingsoon.png" alt="Game 1">
+                <p>倒酒遊戲</p>
+            </div>
+            <div class="game">
+                <img src="images\comingsoon.png" alt="Game 2">
+                <p>ComingSoon</p>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <h2>快醉程度：低</h2>
+        <div class="game-section">
+            <div class="game">
+                <img src="images\comingsoon.png" alt="Game 1">
+                <p>比手畫腳</p>
+            </div>
+            <div class="game">
+                <img src="images\comingsoon.png" alt="Game 2">
+                <p>comingsoon</p>
+            </div>
+        </div>
+    </section>
+</body>
+
+</html>
+
+

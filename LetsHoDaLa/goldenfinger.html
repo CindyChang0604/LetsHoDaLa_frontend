@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金手指遊戲</title>
+<script src="js\socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:3000');
+    window.onload = function() {
+        const room = localStorage.getItem('roomname');
+        const username = localStorage.getItem('client');
+        const isHost = localStorage.getItem('IsHost');
+        socket.emit('joinRoom', room, username, isHost)
+        socket.on('roomData', (data) => {
+            document.getElementById('user-info').textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`
+        });
+        if (room) {
+            socket.emit('getRoomHost', room);
+        }
+    
+        socket.on('roomHostInfo', (data) => {
+            // 根据房长ID调整UI，例如显示或隐藏特定控件
+            if (username === data.hostId) {
+                // 显示控件
+                console.log(username,data.hostId)
+                console.log("当前用户是房长");
+                document.getElementById('gameDuration').style.display = 'block';
+                document.getElementById('confirmDuration').style.display = 'block';
+            } else {
+                // 隐藏控件
+                console.log("当前用户不是房长");
+                document.getElementById('gameDuration').style.display = 'none';
+                document.getElementById('confirmDuration').style.display = 'none';
+            }
+        });
+          // 初始化 DOM 元素引用
+        const startGameButton = document.getElementById('startGame');
+        const popupGame = document.getElementById('popup_game');
+        const gameDurationInput = document.getElementById('gameDuration');
+        const clickCounter = document.getElementById('clickCount');
+        const gameArea = document.getElementById('gameArea');
+        const rulesPopup = document.getElementById('rulesPopup'); // 游戏规则的弹窗
+        const confirmDurationButton = document.getElementById('confirmDuration'); // 确认游戏时间按钮
+        const countdownElement = document.getElementById('countdown'); // 倒计时显示元素
+
+        let lastDuration = 60; // 默认值，或从用户设置中获取
+
+        
+        // 显示游戏规则弹窗
+        startGameButton.addEventListener('click', function() {
+            rulesPopup.style.display = 'block'; // 显示游戏规则弹窗
+        });
+        // 关闭弹窗按钮点击事件
+        document.querySelectorAll('.close-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.parentElement.parentElement.style.display = 'none'; // 隐藏弹窗
+            });
+        });
+        
+        // 确认游戏时长并开始游戏
+        // 房长点击开始游戏
+        confirmDurationButton.addEventListener('click', function() {
+            const duration = parseInt(gameDurationInput.value);
+            if (duration < 1 || duration > 100) {
+                alert("请输入有效的秒数 (1~100)。");
+                return;
+            }
+            lastDuration = duration; // 保存游戏时长
+            rulesPopup.style.display = 'none'; // 隐藏游戏规则弹窗
+            gameDurationInput.value = ''; // 清除输入框内容
+
+            // 发送开始游戏命令到服务器
+            socket.emit('startGame', {room, duration});
+            });
+
+        socket.on('gameStarted', (duration) => {
+            startCountdown(3, duration);
+        });    
+
+        // 开始倒计时函数
+        function startCountdown(count, duration) {
+            startGameButton.style.display = 'none'; // 隐藏开始游戏按钮
+            startGameButton.style.display = 'none'; // 隐藏开始游戏按钮
+            countdownElement.style.display = 'block'; // 显示倒计时
+            countdownElement.innerText = count; // 初始显示3
+            let timer = setInterval(function() {
+                count--;
+                if (count === 0) { // 当倒计时到0时结束，但不显示0
+                    clearInterval(timer);
+                    countdownElement.style.display = 'none'; // 隐藏倒计时
+                    startGame(duration); // 倒计时结束后开始游戏
+                } else {
+                    countdownElement.innerText = count; // 显示2, 1
+                }
+            }, 1000);
+        }
+        
+        
+        // 开始游戏逻辑
+        function startGame(duration) {
+            let count = 0;
+            clickCounter.innerText = count; // 显示计数器重置
+            gameArea.classList.remove('hidden'); // 显示游戏区域
+
+            // 移除可能存在的之前的事件监听器，避免重复绑定
+            document.removeEventListener('click', incrementCounter);
+
+            // 定义新的点击事件处理器
+            function incrementCounter() {
+                count++;
+                clickCounter.innerText = count; // 更新显示的计数
+            }
+
+            // 给整个文档添加点击事件监听器
+            document.addEventListener('click', incrementCounter);
+
+            // 在指定的游戏时间后结束游戏
+            setTimeout(() => {
+                endGame()
+                document.removeEventListener('click', incrementCounter); // 移除点击事件监听器
+                gameArea.classList.add('hidden'); // 隐藏游戏区域
+                clickCounter.innerText = '0'; // 重置计数器显示
+                startGameButton.style.display = ''; // 重新显示开始游戏按钮
+                
+            }, duration * 1000); // 确保使用的是毫秒
+        }
+
+        function endGame() {
+            const room = localStorage.getItem('roomname');
+            const username = localStorage.getItem('client');
+            const clicks = parseInt(document.getElementById('clickCount').textContent); // 获取用户的点击次数
+        
+            socket.emit('endGame', { room, username, clicks });
+        }
+        
+        socket.on('gameOver', (data) => {
+            displayGameOverPopup(data.leaderboard, data.loser);
+        });
+        
+        function displayGameOverPopup(leaderboard, loser) {
+            const resultsContainer = document.getElementById('resultsContainer');
+            resultsContainer.innerHTML = '';
+        
+            leaderboard.forEach(player => {
+                const entry = document.createElement('div');
+                entry.textContent = `${player.username}: ${player.clicks} clicks`;
+                resultsContainer.appendChild(entry);
+            });
+        
+            const loserAnnouncement = document.getElementById('loserAnnouncement');
+            loserAnnouncement.textContent = `${loser.username} HoDaLa!!`; // Display the name of the user with the least clicks
+        
+            const gameOverPopup = document.getElementById('gameOverPopup');
+            gameOverPopup.style.display = 'block'; // Show the game over popup
+        }
+
+        function incrementCounter(event) {
+            // 检查点击的是否是 "再玩一次" 或 "回主选单" 按钮
+            if (event.target.id === 'playAgain' || event.target.id === 'backToMenu') {
+                return; // 如果是这些按钮的点击，直接返回，不计数
+            }
+
+            count++;
+            clickCounter.innerText = count;
+        }
+
+        socket.on('playagain', (data) => {
+            event.stopPropagation(); // 阻止事件冒泡
+            document.getElementById('gameOverPopup').style.display = 'none';
+            startCountdown(3,data); // 使用保存的上次游戏时长重新开始游戏
+        });
+
+
+        // 再玩一次和回主选单的逻辑
+        document.getElementById('playAgain').addEventListener('click', function(event) {
+            socket.emit('Playagain', {room:room, time:lastDuration});
+        });
+
+        socket.on('back', () => {
+            event.stopPropagation(); // 阻止事件冒泡
+            document.getElementById('gameOverPopup').style.display = 'none';
+            localStorage.setItem('username', username);
+            localStorage.setItem('room', room);
+            localStorage.setItem('isHost', isHost); // 儲存是否為房長
+            window.location.href = 'choose_game.html'; // 导航到主菜单页面
+        });
+
+        document.getElementById('backToMenu').addEventListener('click', function(event) {
+            socket.emit('backtomenu', room);
+        });
+
+    }
+</script>
+
+<style>
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f0f0f0;
+}
+
+#startGame {
+    background-color: #4CAF50; /* 绿色背景 */
+    color: white; /* 白色文字 */
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 20px auto;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#goldenfinger {
+    max-width: 30%;
+    height: auto;
+}
+@media (max-width: 600px) {
+    #goldenfinger {
+        max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
+    }
+}
+
+.hidden {
+  display: none;
+}
+
+.container {
+  text-align: center;
+  padding: 20px;
+}
+
+.popup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+
+.popup-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 450px;
+    max-height: 80%; /* 限制最大高度 */
+    overflow-y: auto; /* 允许纵向滚动 */
+}
+
+.close-btn {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.loser-announcement {
+    color: green;
+    font-size: 24px;
+}
+
+.results-info {
+    color: red;
+    font-size: 20px;
+}
+
+.results-count {
+    font-weight: bold;
+}
+
+
+
+</style>
+</head>
+<body>
+<div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 16px;"></div>
+<div id="leaderboard"></div>
+<div class="container">
+    <div id="countdown" style="font-size: 48px; text-align: center; display: none;">3</div>
+    <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
+    <h1>金手指</h1>
+    <button id="startGame">開始遊戲</button>
+
+    <div id="gameArea" class="hidden">
+      <p style="font-size: 20px;">點擊次數: <span id="clickCount">0</span></p>
+    </div>
+</div>
+
+<div id="rulesPopup" class="popup" style="display: none;">
+  <div class="popup-content">
+      <span class="close-btn">&times;</span>
+      <h2>遊戲規則</h2>
+      <p>這是一個點擊遊戲，請在指定的時間內運用你的「金手指」努力點擊螢幕，點擊次數最少的輸家喝酒！</p>
+      <p>請由房長決定遊戲時長，點擊確認後遊戲即開始。</p>
+      <!-- 下面的只有房長有 -->
+      <input type="number" id="gameDuration" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="請輸入遊戲秒數1~100秒"> 
+      <button id="confirmDuration" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Start</button>
+  </div>
+</div>
+<div id="gameOverPopup" class="popup" style="display: none;">
+    <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>游戏结果</h2>
+        <p id="loserAnnouncement" class="loser-announcement"></p>
+        <div id="resultsContainer" class="results-info">
+            <span>點擊次數：</span><span class="results-count">0</span>次
+        </div>
+        <div style="display: flex; justify-content: space-around;">
+            <button id="playAgain" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">再玩一次</button>
+            <button id="backToMenu" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">回主菜单</button>
+        </div>
+    </div>
+</div>
+</body>
+</html>
