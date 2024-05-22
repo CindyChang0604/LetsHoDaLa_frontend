@@ -1,44 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HoDaLa DrinkingGame</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Socket.io Rooms Example</title>
+<script src="js\socket.io.js"></script>
+<script>
+    const socket = io('http://localhost:3000');
+
+    function joinRoom() {
+      const username = document.getElementById('username').value;
+      const room = document.getElementById('room').value;
+      const isHost = document.getElementById('isHost').checked;
+      
+      // 儲存用戶名稱和房間名稱到本地存儲
+      localStorage.setItem('username', username);
+      localStorage.setItem('room', room);
+      localStorage.setItem('isHost', isHost); // 儲存是否為房長
+
+      // 跳轉到 choose_game.html
+      window.location.href = 'choose_game.html';
+    }
+
+    function leaveRoom() {
+        const room = document.getElementById('room').value;
+        socket.emit('leaveRoom', room);
+    }
+
+
+    socket.on('message', (message) => {
+        const messages = document.getElementById('messages');
+        const messageElement = document.createElement('li');
+        messageElement.textContent = message;
+        messages.appendChild(messageElement);
+    });
+</script>
 </head>
 <body>
-    <div class="container">
-        <img src="beergame.png" alt="Game Image" class="game-image">
-        <h1>HoDaLa</h1>
-        <button id="startGame">發起遊戲</button>
-        <button id="enterRoom">輸入房號</button>
-    </div>
-    <div id="popup_start" class="popup" style="display: none;">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <p id="roomIdDisplay" style="text-align: center;"> 房號是：1234567890</p>
-            <button id="copyRoomId">複製房號</button>
-            <button id="sendRoomId">發送房號</button>
-        </div>
-    </div>
-
-    <div id="popup_room" class="popup" style="display: none;">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <p style="text-align: center; font-size: 20px;">請輸入房號及暱稱</p>
-            <div class="input-group">
-                <label for="room_id" style="margin-right: 10px;">房號：</label>
-                <input type="text" id="room_id" name="room_id" placeholder="請輸入10碼數字">
-            </div>
-            <div class="input-group">
-                <label for="nickname" style="margin-right: 10px;">暱稱：</label>
-                <input type="text" id="nickname" name="nickname" placeholder="請輸入暱稱">
-            </div>
-            <button id="send_room_id">送出</button>
-        </div>
-    </div>
-    
-
-    <script src="script.js"></script>
+  <input type="text" id="username" placeholder="Enter your username">
+  <input type="text" id="room" placeholder="Room name">
+  <input type="checkbox" id="isHost" value="host"> 我是房長<br>
+  <button onclick="joinRoom()">Join Room</button>
+  <ul id="messages"></ul>
 </body>
 </html>

@@ -4,6 +4,52 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>請選擇遊戲</title>
+    <script src="js\socket.io.js"></script>
+    <script>
+        
+        window.onload = function() {
+            const socket = io('http://localhost:3000');
+            const username = localStorage.getItem('username');
+            const room = localStorage.getItem('room');
+            const isHost = localStorage.getItem('isHost') === 'true';
+            
+    
+            socket.emit('joinRoom', room, username, isHost)
+            // 假設房間人數（需要從服務器獲取）
+            socket.on('roomData', (data) => {
+                document.getElementById('user-info').textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`
+            });
+
+            if (room) {
+                socket.emit('getRoomHost', room);
+            }
+        
+            socket.on('roomHostInfo', (data) => {
+                console.log('房间:', data.room, '房长ID:', data.hostId);
+                // 根据房长ID调整UI，例如显示或隐藏特定控件
+                if (!(username === data.hostId)) {
+                    document.querySelectorAll('.game').forEach(game => {
+                        game.style.pointerEvents = 'none'; // 禁用點擊事件
+                        game.style.opacity = '0.6'; // 讓元素看起來不可點擊
+                    })
+                }
+            });
+            
+            document.getElementById('goldenfinger').addEventListener('click', function() {
+                socket.emit('requestNavigate', { room: room, target: 'goldenfinger.html' });
+            });
+    
+            socket.on('navigate', (target) => {
+                
+                localStorage.setItem('roomname', room);
+                localStorage.setItem('client', username);
+                localStorage.setItem('IsHost', isHost);
+                window.location.href = target;
+            });
+        }
+
+
+    </script>
     <style>
         body {
             margin: 0;
@@ -75,18 +121,19 @@
     </style>
 </head>
 <body>
+    <div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 16px;"></div>
     <h1>請選擇遊戲</h1>
     
     <section>
         <h2>快醉程度：高</h2>
         <div class="game-section">
             <div class="game">
-                <img src="goldenfinger.png" alt="goldenfinger" id="goldenfinger">
+                <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
                 <p>金手指</p>
             </div>
             <div class="game">
-                <img src="comingsoon.png" alt="敲敲杯">
-                <p>敲敲杯</p>
+                <img src="images\comingsoon.png" alt="finalpassword">
+                <p>終極密碼</p>
             </div>
         </div>
     </section>
@@ -95,11 +142,11 @@
         <h2>快醉程度：中</h2>
         <div class="game-section">
             <div class="game">
-                <img src="comingsoon.png" alt="Game 1">
+                <img src="images\comingsoon.png" alt="Game 1">
                 <p>倒酒遊戲</p>
             </div>
             <div class="game">
-                <img src="comingsoon.png" alt="Game 2">
+                <img src="images\comingsoon.png" alt="Game 2">
                 <p>ComingSoon</p>
             </div>
         </div>
@@ -109,21 +156,17 @@
         <h2>快醉程度：低</h2>
         <div class="game-section">
             <div class="game">
-                <img src="comingsoon.png" alt="Game 1">
+                <img src="images\comingsoon.png" alt="Game 1">
                 <p>比手畫腳</p>
             </div>
             <div class="game">
-                <img src="comingsoon.png" alt="Game 2">
+                <img src="images\comingsoon.png" alt="Game 2">
                 <p>comingsoon</p>
             </div>
         </div>
     </section>
-    <script>
-        document.getElementById('goldenfinger').addEventListener('click', function() {
-            window.location.href = 'goldenfinger.html';
-        });
-        </script>
 </body>
+
 </html>
 
 
