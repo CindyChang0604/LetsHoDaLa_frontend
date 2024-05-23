@@ -1,6 +1,10 @@
+
 const io = require('socket.io')(3000, {
   cors: {
-      origin: "*"
+    origin: "*",  // 这里可以更精确地指定来源，例如 http://localhost:8080
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true
   }
 });
 
@@ -95,7 +99,6 @@ io.on('connection', socket => {
 
       // 移除追蹤
       socketRoomMap.delete(socket.id);
-      roomHostMap.delete(room)
       if (io.sockets.adapter.rooms[room]) {
         const roomCount = io.sockets.adapter.rooms[room].length;
         io.to(room).emit('roomData', {count: roomCount});

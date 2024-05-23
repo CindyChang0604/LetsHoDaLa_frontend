@@ -8,9 +8,9 @@
 <script>
     const socket = io('http://localhost:3000');
     window.onload = function() {
-        const room = localStorage.getItem('roomname');
-        const username = localStorage.getItem('client');
-        const isHost = localStorage.getItem('IsHost');
+        const username = localStorage.getItem('username');
+        const room = localStorage.getItem('room');
+        const isHost = localStorage.getItem('isHost')==='true';
         socket.emit('joinRoom', room, username, isHost)
         socket.on('roomData', (data) => {
             document.getElementById('user-info').textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`
@@ -29,6 +29,7 @@
                 document.getElementById('confirmDuration').style.display = 'block';
             } else {
                 // 隐藏控件
+                console.log(username,data.hostId)
                 console.log("当前用户不是房长");
                 document.getElementById('gameDuration').style.display = 'none';
                 document.getElementById('confirmDuration').style.display = 'none';
@@ -66,8 +67,8 @@
                 alert("请输入有效的秒数 (1~100)。");
                 return;
             }
-            lastDuration = duration; // 保存游戏时长
-            rulesPopup.style.display = 'none'; // 隐藏游戏规则弹窗
+            
+            
             gameDurationInput.value = ''; // 清除输入框内容
 
             // 发送开始游戏命令到服务器
@@ -75,6 +76,8 @@
             });
 
         socket.on('gameStarted', (duration) => {
+            lastDuration = duration; // 保存游戏时长
+            rulesPopup.style.display = 'none'; // 隐藏游戏规则弹窗
             startCountdown(3, duration);
         });    
 
@@ -127,8 +130,8 @@
         }
 
         function endGame() {
-            const room = localStorage.getItem('roomname');
-            const username = localStorage.getItem('client');
+            const room = localStorage.getItem('room');
+            const username = localStorage.getItem('username');
             const clicks = parseInt(document.getElementById('clickCount').textContent); // 获取用户的点击次数
         
             socket.emit('endGame', { room, username, clicks });
@@ -180,9 +183,9 @@
         socket.on('back', () => {
             event.stopPropagation(); // 阻止事件冒泡
             document.getElementById('gameOverPopup').style.display = 'none';
-            localStorage.setItem('username', username);
-            localStorage.setItem('room', room);
-            localStorage.setItem('isHost', isHost); // 儲存是否為房長
+            //localStorage.setItem('username', username);
+            //localStorage.setItem('room', room);
+            //localStorage.setItem('isHost', isHost); // 儲存是否為房長
             window.location.href = 'choose_game.html'; // 导航到主菜单页面
         });
 

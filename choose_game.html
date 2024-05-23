@@ -11,8 +11,8 @@
             const socket = io('http://localhost:3000');
             const username = localStorage.getItem('username');
             const room = localStorage.getItem('room');
-            const isHost = localStorage.getItem('isHost') === 'true';
-            
+            const isHost = localStorage.getItem('isHost')==='true';
+            console.log(typeof(isHost),isHost)
     
             socket.emit('joinRoom', room, username, isHost)
             // 假設房間人數（需要從服務器獲取）
@@ -40,10 +40,6 @@
             });
     
             socket.on('navigate', (target) => {
-                
-                localStorage.setItem('roomname', room);
-                localStorage.setItem('client', username);
-                localStorage.setItem('IsHost', isHost);
                 window.location.href = target;
             });
         }
