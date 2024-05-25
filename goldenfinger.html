@@ -197,7 +197,7 @@
           window.location.href = "choose_game.html"; // 导航到主菜单页面
         });
 
-        const allBackToMenuButtons = document.querySelectorAll("backToMenu");
+        const allBackToMenuButtons = document.querySelectorAll(".backToMenu");
         allBackToMenuButtons.forEach((button) => {
           button.addEventListener("click", function (event) {
             socket.emit("backtomenu", room);
@@ -317,7 +317,7 @@
       <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger" />
       <h1>GoldenFinger</h1>
       <button id="startGame">Start Game</button>
-      <button id="backToMenu">Back to Menu</button>
+      <button id="backToMenu" class="backToMenu">Back to Menu</button>
 
       <div id="gameArea" class="hidden">
         <p style="font-size: 20px">點擊次數: <span id="clickCount">0</span></p>
@@ -385,6 +385,7 @@
           </button>
           <button
             id="backToMenu"
+            class="backToMenu"
             style="
               display: block;
               width: 150px;
