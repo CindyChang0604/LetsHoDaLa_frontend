@@ -197,7 +197,7 @@
           window.location.href = "choose_game.html"; // 导航到主菜单页面
         });
 
-        const allBackToMenuButtons = document.querySelectorAll("#backToMenu");
+        const allBackToMenuButtons = document.querySelectorAll("backToMenu");
         allBackToMenuButtons.forEach((button) => {
           button.addEventListener("click", function (event) {
             socket.emit("backtomenu", room);
