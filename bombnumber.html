@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>金手指遊戲</title>
-    <script src="socket.io.js"></script>
+    <script src="js\socket.io.js"></script>
     <script>
       // const socket = io('http://localhost:3000');
       const socket = io("https://letshodala-backend.zeabur.app");
@@ -28,28 +28,26 @@
             // 显示控件
             console.log(username, data.hostId);
             console.log("当前用户是房长");
-            document.getElementById("gameDuration").style.display = "block";
             document.getElementById("confirmDuration").style.display = "block";
           } else {
             // 隐藏控件
             console.log(username, data.hostId);
             console.log("当前用户不是房长");
-            document.getElementById("gameDuration").style.display = "none";
             document.getElementById("confirmDuration").style.display = "none";
           }
         });
         // 初始化 DOM 元素引用
         const startGameButton = document.getElementById("startGame");
         const popupGame = document.getElementById("popup_game");
-        const gameDurationInput = document.getElementById("gameDuration");
+        const guessInput = document.getElementById("guessInput");
+        const submitGuess = document.getElementById("submitGuess");
         const clickCounter = document.getElementById("clickCount");
         const gameArea = document.getElementById("gameArea");
         const rulesPopup = document.getElementById("rulesPopup"); // 游戏规则的弹窗
         const confirmDurationButton =
           document.getElementById("confirmDuration"); // 确认游戏时间按钮
         const countdownElement = document.getElementById("countdown"); // 倒计时显示元素
-
-        let lastDuration = 60; // 默认值，或从用户设置中获取
+        let secretnumber = 50;
 
         // 显示游戏规则弹窗
         startGameButton.addEventListener("click", function () {
@@ -65,115 +63,55 @@
         // 确认游戏时长并开始游戏
         // 房长点击开始游戏
         confirmDurationButton.addEventListener("click", function () {
-          const duration = parseInt(gameDurationInput.value);
-          if (duration < 1 || duration > 100) {
-            alert("请输入有效的秒数 (1~100)。");
-            return;
-          }
-
-          gameDurationInput.value = ""; // 清除输入框内容
-
           // 发送开始游戏命令到服务器
-          socket.emit("startGame", { room, duration });
+          socket.emit("startGamesecret", room);
         });
 
-        socket.on("gameStarted", (duration) => {
-          lastDuration = duration; // 保存游戏时长
+        socket.on("gameStartedsecret", (data) => {
+          event.stopPropagation(); // 阻止事件冒泡
+          document.getElementById("gameOverPopup").style.display = "none";
           rulesPopup.style.display = "none"; // 隐藏游戏规则弹窗
-          startCountdown(3, duration);
+          startGameButton.style.display = "none"; // 隐藏开始游戏按钮
+          gameArea.classList.remove("hidden");
+          document.getElementById("min").innerText = 0;
+          document.getElementById("max").innerText = 100;
+          secretnumber = data.secret;
+          document.getElementById("resultnumber").innerText = secretnumber;
         });
 
-        // 开始倒计时函数
-        function startCountdown(count, duration) {
-          startGameButton.style.display = "none"; // 隐藏开始游戏按钮
-          startGameButton.style.display = "none"; // 隐藏开始游戏按钮
-          countdownElement.style.display = "block"; // 显示倒计时
-          countdownElement.innerText = count; // 初始显示3
-          let timer = setInterval(function () {
-            count--;
-            if (count === 0) {
-              // 当倒计时到0时结束，但不显示0
-              clearInterval(timer);
-              countdownElement.style.display = "none"; // 隐藏倒计时
-              startGame(duration); // 倒计时结束后开始游戏
-            } else {
-              countdownElement.innerText = count; // 显示2, 1
-            }
-          }, 1000);
-        }
+        socket.on("yourTurn", () => {
+          guessInput.style.display = "block";
+          submitGuess.style.display = "block";
+        });
 
         // 开始游戏逻辑
-        function startGame(duration) {
-          let count = 0;
-          clickCounter.innerText = count; // 显示计数器重置
-          gameArea.classList.remove("hidden"); // 显示游戏区域
-
-          // 移除可能存在的之前的事件监听器，避免重复绑定
-          document.removeEventListener("click", incrementCounter);
-
-          // 定义新的点击事件处理器
-          function incrementCounter() {
-            count++;
-            clickCounter.innerText = count; // 更新显示的计数
+        submitGuess.addEventListener("click", function () {
+          const guess = parseInt(guessInput.value);
+          const min = parseInt(document.getElementById("min").innerText);
+          const max = parseInt(document.getElementById("max").innerText);
+          guessInput.value = ""; // 清除输入框内容
+          if (guess <= min || guess >= max) {
+            alert(`请输入有效的號碼 (${min}~${max})。`);
+            return;
           }
-
-          // 给整个文档添加点击事件监听器
-          document.addEventListener("click", incrementCounter);
-
-          // 在指定的游戏时间后结束游戏
-          setTimeout(() => {
-            endGame();
-            document.removeEventListener("click", incrementCounter); // 移除点击事件监听器
-            gameArea.classList.add("hidden"); // 隐藏游戏区域
-            clickCounter.innerText = "0"; // 重置计数器显示
-            startGameButton.style.display = ""; // 重新显示开始游戏按钮
-          }, duration * 1000); // 确保使用的是毫秒
-        }
-
-        function endGame() {
-          const room = localStorage.getItem("room");
-          const username = localStorage.getItem("username");
-          const clicks = parseInt(
-            document.getElementById("clickCount").textContent
-          ); // 获取用户的点击次数
-
-          socket.emit("endGame", { room, username, clicks });
-        }
-
-        socket.on("gameOver", (data) => {
-          displayGameOverPopup(data.leaderboard, data.loser);
+          guessInput.style.display = "none";
+          submitGuess.style.display = "none";
+          socket.emit("guessNumber", room, guess, min, max);
         });
 
-        function displayGameOverPopup(leaderboard, loser) {
-          const resultsContainer = document.getElementById("resultsContainer");
-          resultsContainer.innerHTML = "";
+        socket.on("updateRange", (min, max) => {
+          document.getElementById("min").innerText = min;
+          document.getElementById("max").innerText = max;
+        });
 
-          leaderboard.forEach((player) => {
-            const entry = document.createElement("div");
-            entry.textContent = `${player.username}: ${player.clicks} clicks`;
-            resultsContainer.appendChild(entry);
-          });
-
+        socket.on("endGamesecret", (loser) => {
           const loserAnnouncement =
             document.getElementById("loserAnnouncement");
-          loserAnnouncement.textContent = `${loser.username} HoDaLa!!`; // Display the name of the user with the least clicks
+          loserAnnouncement.textContent = `${loser} HoDaLa!!`; // Display the name of the user with the least clicks
 
           const gameOverPopup = document.getElementById("gameOverPopup");
           gameOverPopup.style.display = "block"; // Show the game over popup
-        }
-
-        function incrementCounter(event) {
-          // 检查点击的是否是 "再玩一次" 或 "回主选单" 按钮
-          if (
-            event.target.id === "playAgain" ||
-            event.target.id === "backToMenu"
-          ) {
-            return; // 如果是这些按钮的点击，直接返回，不计数
-          }
-
-          count++;
-          clickCounter.innerText = count;
-        }
+        });
 
         socket.on("playagain", (data) => {
           event.stopPropagation(); // 阻止事件冒泡
@@ -185,7 +123,7 @@
         document
           .getElementById("playAgain")
           .addEventListener("click", function (event) {
-            socket.emit("Playagain", { room: room, time: lastDuration });
+            socket.emit("startGamesecret", room);
           });
 
         socket.on("back", () => {
@@ -305,7 +243,6 @@
       id="user-info"
       style="position: absolute; top: 10px; left: 10px; font-size: 16px"
     ></div>
-    <div id="leaderboard"></div>
     <div class="container">
       <div
         id="countdown"
@@ -314,37 +251,51 @@
         3
       </div>
       <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger" />
-      <h1>GoldenFinger</h1>
-      <button id="startGame">Start Game</button>
-      <button id="backToMenu">Back to Menu</button>
+      <h1>終極密碼</h1>
+      <button id="startGame">開始遊戲</button>
 
       <div id="gameArea" class="hidden">
-        <p style="font-size: 20px">點擊次數: <span id="clickCount">0</span></p>
-      </div>
-    </div>
-
-    <div id="rulesPopup" class="popup" style="display: none">
-      <div class="popup-content">
-        <span class="close-btn">&times;</span>
-        <h2>遊戲規則</h2>
-        <p>
-          這是一個點擊遊戲，請在指定的時間內運用你的「金手指」努力點擊螢幕，點擊次數最少的輸家喝酒！
+        <p id="numberRange" style="font-size: 20px">
+          Number range: <span id="min">0</span>-<span id="max">100</span>
         </p>
-        <p>請由房長決定遊戲時長，點擊確認後遊戲即開始。</p>
-        <!-- 下面的只有房長有 -->
         <input
           type="number"
-          id="gameDuration"
+          id="guessInput"
           style="
+            display: none;
             font-size: 18px;
-            display: block;
             margin: 20px auto;
             width: 80%;
             max-width: 300px;
             padding: 10px;
           "
-          placeholder="請輸入遊戲秒數1~100秒"
+          placeholder="Enter your guess"
         />
+        <button
+          id="submitGuess"
+          style="
+            display: none;
+            width: 200px;
+            padding: 10px;
+            margin: 20px auto;
+            font-size: 16px;
+            cursor: pointer;
+          "
+        >
+          Submit Guess
+        </button>
+      </div>
+    </div>
+    <div id="rulesPopup" class="popup" style="display: none">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>遊戲規則</h2>
+        <p>遊戲開始時，電腦會從0-100中選定一個數字，不會讓參與遊戲者得知。</p>
+        <p>
+          遊戲參與者輪流報一個數字，電腦會告知該密碼是在該數字之上或之下，並依據此條件縮小參與者可選數字的範圍，直至有人報出密碼，猜中的人就要喝酒！
+        </p>
+        <p>點擊確認後遊戲即開始。</p>
+        <!-- 下面的只有房長有 -->
         <button
           id="confirmDuration"
           style="
@@ -363,10 +314,10 @@
     <div id="gameOverPopup" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
-        <h2>遊戲結果</h2>
+        <h2>游戏结果</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div id="resultsContainer" class="results-info">
-          <span>點擊次數：</span><span class="results-count">0</span>次
+          <span>終極密碼：</span><span id="resultnumber">0</span>
         </div>
         <div style="display: flex; justify-content: space-around">
           <button
