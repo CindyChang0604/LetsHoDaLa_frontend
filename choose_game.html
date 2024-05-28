@@ -55,6 +55,10 @@
             });
           });
 
+        document.getElementById('beergame').addEventListener('click', function() {
+                socket.emit('requestNavigate', { room: room, target: 'beergame.html' });
+            });
+
         socket.on("navigate", (target) => {
           window.location.href = target;
         });
@@ -194,7 +198,7 @@
       <h2>Drunk Level：Medium</h2>
       <div class="game-section">
         <div class="game">
-          <img src="images/comingsoon.png" alt="Game 1" />
+          <img src="images/comingsoon.png" alt="beergame" id="beergame"/>
           <p>PouringDrinks</p>
         </div>
         <div class="game">
