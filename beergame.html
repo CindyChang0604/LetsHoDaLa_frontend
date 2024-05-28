@@ -6,7 +6,8 @@
 <title>金手指遊戲</title>
 <script src="socket.io.js"></script>
 <script>
-    const socket = io('http://localhost:3000');
+    // const socket = io('http://localhost:3000');
+    const socket = io("https://letshodala-backend.zeabur.app");
     window.onload = function() {
         const username = localStorage.getItem('username');
         const room = localStorage.getItem('room');
