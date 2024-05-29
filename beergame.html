@@ -98,7 +98,12 @@
         pourButton.addEventListener('mousedown', function() {
             socket.emit('pourLiquid', room)
         });
-
+        
+        pourButton.addEventListener('touchstart', function(){
+            event.preventDefault();
+            socket.emit('pourLiquid', room)
+        })
+        
         socket.on('updateImg', () => {
             pouring = true;
             drawLiquid();
@@ -113,6 +118,12 @@
             socket.emit('stopPouring', room); // Also stop pouring if the mouse leaves the button while pressed
             socket.emit('updateImg', room)
         });
+
+        pourButton.addEventListener('touchend', function(){
+            event.preventDefault();
+            socket.emit('stopPouring', room); // Also stop pouring if the mouse leaves the button while pressed
+            socket.emit('updateImg', room)
+        })
 
         socket.on('stopImg', () => {
             pouring = false;
