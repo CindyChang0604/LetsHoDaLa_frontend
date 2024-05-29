@@ -4,15 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>請選擇遊戲</title>
-    <script src="js\socket.io.js"></script>
+    <script src="socket.io.js"></script>
     <script>
       window.onload = function () {
         // const socket = io('http://localhost:3000');
         const socket = io("https://letshodala-backend.zeabur.app");
-        socket.on("connect", () => {
-          console.log("Connected to server");
-        });
-
         const username = localStorage.getItem("username");
         const room = localStorage.getItem("room");
         const isHost = localStorage.getItem("isHost") === "true";
@@ -44,7 +40,6 @@
         document
           .getElementById("goldenfinger")
           .addEventListener("click", function () {
-            console.log("GoldenFinger clicked");
             socket.emit("requestNavigate", {
               room: room,
               target: "goldenfinger.html",
@@ -54,15 +49,22 @@
         document
           .getElementById("bombnumber")
           .addEventListener("click", function () {
-            console.log("BombNumber clicked");
             socket.emit("requestNavigate", {
               room: room,
               target: "bombnumber.html",
             });
           });
 
+        document
+          .getElementById("pouringbeer")
+          .addEventListener("click", function () {
+            socket.emit("requestNavigate", {
+              room: room,
+              target: "pouringbeer.html",
+            });
+          });
+
         socket.on("navigate", (target) => {
-          console.log("Navigating to", target);
           window.location.href = target;
         });
       };
@@ -176,11 +178,10 @@
     </div>
     <div class="spacer"></div>
 
-    <!-- <div
+    <div
       id="user-info"
       style="position: absolute; top: 10px; left: 10px; font-size: 16px"
     ></div>
-    <h1>請選擇遊戲</h1> -->
 
     <section>
       <h2>Drunk Level：High</h2>
@@ -204,8 +205,12 @@
       <h2>Drunk Level：Medium</h2>
       <div class="game-section">
         <div class="game">
-          <img src="images/comingsoon.png" alt="Game 1" />
-          <p>PouringDrinks</p>
+          <img
+            src="images/pouringbeer.png"
+            alt="pouringbeer"
+            id="pouringbeer"
+          />
+          <p>PouringBeer</p>
         </div>
         <div class="game">
           <img src="images/comingsoon.png" alt="Game 2" />
