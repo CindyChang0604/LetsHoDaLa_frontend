@@ -32,8 +32,8 @@
       username = createUser.value
       room = createRoom.value
       isHost = true
-      socket.emit('room', room)
-      socket.on('roomExist', yesno => {
+      socket.emit('Createroom', room)
+      socket.on('CreateroomExist', yesno => {
         if(yesno){
           localStorage.setItem('username', username);
           localStorage.setItem('room', room);
@@ -52,8 +52,8 @@
       username = joinUser.value
       room = joinRoom.value
       isHost = false
-      socket.emit('room', room)
-      socket.on('roomExist', yesno => {
+      socket.emit('Joinroom', room)
+      socket.on('JoinroomExist', yesno => {
         if(!yesno){
           
           localStorage.setItem('username', username);
