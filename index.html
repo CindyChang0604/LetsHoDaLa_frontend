@@ -16,7 +16,10 @@
     const joinUser = document.getElementById('joinUser')
     const joinRoom = document.getElementById('joinRoom')
     const joinConfirm = document.getElementById('joinConfirm')
-
+    let username
+    let room
+    let isHost
+    
     create.addEventListener('click', function(){
       document.getElementById('createPopup').style.display = 'block'
     })
@@ -26,9 +29,9 @@
     })
     
     createConfirm.addEventListener('click', function(){
-      const username = createUser.value
-      const room = createRoom.value
-      const isHost = true
+      username = createUser.value
+      room = createRoom.value
+      isHost = true
       socket.emit('room', room)
       socket.on('roomExist', yesno => {
         if(yesno){
@@ -46,9 +49,9 @@
     })
 
     joinConfirm.addEventListener('click', function(){
-      const username = joinUser.value
-      const room = joinRoom.value
-      const isHost = false
+      username = joinUser.value
+      room = joinRoom.value
+      isHost = false
       socket.emit('room', room)
       socket.on('roomExist', yesno => {
         if(!yesno){
