@@ -119,7 +119,10 @@
 
           // 给整个文档添加点击事件监听器
           document.addEventListener("click", incrementCounter);
-
+          document.addEventListener('touchstart', function(){
+                event.preventDefault();
+                incrementCounter()
+          })
           // 在指定的游戏时间后结束游戏
           setTimeout(() => {
             endGame();
