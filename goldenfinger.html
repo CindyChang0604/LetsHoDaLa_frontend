@@ -210,6 +210,13 @@
     </script>
 
     <style>
+body, button, input, textarea, canvas {
+    -webkit-tap-highlight-color: transparent; /* 针对Webkit/Chrome浏览器 */
+    -webkit-user-select: none; /* 禁止选中文本，针对Webkit/Chrome浏览器 */
+    -moz-user-select: none; /* 禁止选中文本，针对Firefox */
+    -ms-user-select: none; /* 禁止选中文本，针对IE */
+    user-select: none; /* 标准语法 */
+}
       body,
       html {
         height: 100%;
