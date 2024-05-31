@@ -1,45 +1,226 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Socket.io Rooms Example</title>
-    <script src="socket.io.js"></script>
-    <script>
-      // const socket = io('http://localhost:3000');
-      const socket = io("https://letshodala-backend.zeabur.app");
+<head>
+<meta charset="UTF-8">
+<title>Socket.io Rooms Example</title>
+<script src="socket.io.js"></script>
+<script>
+  window.onload = function() {
+    //const socket = io('http://localhost:3000');
+    const socket = io("https://letshodala-backend.zeabur.app");
+    const create = document.getElementById('create')
+    const createUser = document.getElementById('createUser')
+    const createRoom = document.getElementById('createRoom')
+    const createConfirm = document.getElementById('createConfirm')
+    const join = document.getElementById('join')
+    const joinUser = document.getElementById('joinUser')
+    const joinRoom = document.getElementById('joinRoom')
+    const joinConfirm = document.getElementById('joinConfirm')
 
-      function joinRoom() {
-        const username = document.getElementById("username").value;
-        const room = document.getElementById("room").value;
-        const isHost = document.getElementById("isHost").checked;
-        console.log(typeof isHost, isHost);
-        // 儲存用戶名稱和房間名稱到本地存儲
-        localStorage.setItem("username", username);
-        localStorage.setItem("room", room);
-        localStorage.setItem("isHost", isHost); // 儲存是否為房長
+    create.addEventListener('click', function(){
+      document.getElementById('createPopup').style.display = 'block'
+    })
 
-        // 跳轉到 choose_game.html
-        window.location.href = "choose_game.html";
-      }
+    join.addEventListener('click', function(){
+      document.getElementById('joinPopup').style.display = 'block'
+    })
+    
+    createConfirm.addEventListener('click', function(){
+      const username = createUser.value
+      const room = createRoom.value
+      const isHost = true
+      socket.emit('room', room)
+      socket.on('roomExist', yesno => {
+        if(yesno){
+          localStorage.setItem('username', username);
+          localStorage.setItem('room', room);
+          localStorage.setItem('isHost', isHost); // 儲存是否為房長
 
-      function leaveRoom() {
-        const room = document.getElementById("room").value;
-        socket.emit("leaveRoom", room);
-      }
+          // 跳轉到 choose_game.html
+          window.location.href = 'choose_game.html';
+        }else{
+          alert('Room is Existed. Please change roomname.')
+          return
+        }
+      })
+    })
 
-      socket.on("message", (message) => {
-        const messages = document.getElementById("messages");
-        const messageElement = document.createElement("li");
-        messageElement.textContent = message;
-        messages.appendChild(messageElement);
+    joinConfirm.addEventListener('click', function(){
+      const username = joinUser.value
+      const room = joinRoom.value
+      const isHost = false
+      socket.emit('room', room)
+      socket.on('roomExist', yesno => {
+        if(!yesno){
+          
+          localStorage.setItem('username', username);
+          localStorage.setItem('room', room);
+          localStorage.setItem('isHost', isHost); // 儲存是否為房長
+
+          // 跳轉到 choose_game.html
+          window.location.href = 'choose_game.html';
+        }else{
+          alert('Room is not Existed. Please change roomname.')
+          return
+        }
+      })
+    })
+    //function joinRoom() {
+      //const username = document.getElementById('username').value;
+      ///const room = document.getElementById('room').value;
+      //const isHost = document.getElementById('isHost').checked;
+      //console.log(typeof(isHost),isHost)
+      // 儲存用戶名稱和房間名稱到本地存儲
+      //localStorage.setItem('username', username);
+      //localStorage.setItem('room', room);
+      //localStorage.setItem('isHost', isHost); // 儲存是否為房長
+
+      // 跳轉到 choose_game.html
+      //window.location.href = 'choose_game.html';
+    //}
+
+    // 关闭弹窗按钮点击事件
+    document.querySelectorAll('.close-btn').forEach(button => {
+      button.addEventListener('click', function() {
+          this.parentElement.parentElement.style.display = 'none'; // 隐藏弹窗
       });
-    </script>
-  </head>
+    });
+  }
+</script>
+</head>
+<style>
+  body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+  }
+  
+  #join {
+      background-color: #4CAF50; /* 绿色背景 */
+      color: white; /* 白色文字 */
+      display: block;
+      width: 200px;
+      padding: 10px;
+      margin: 20px auto;
+      font-size: 16px;
+      cursor: pointer;
+  }
+
+  #create {
+    background-color: #4CAF50; /* 绿色背景 */
+    color: white; /* 白色文字 */
+    display: block;
+    width: 200px;
+    padding: 10px;
+    margin: 20px auto;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  #goldenfinger {
+      max-width: 30%;
+      height: auto;
+  }
+  @media (max-width: 600px) {
+      #goldenfinger {
+          max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
+      }
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .container {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .popup {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  
+  .popup-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 450px;
+      max-height: 80%; /* 限制最大高度 */
+      overflow-y: auto; /* 允许纵向滚动 */
+  }
+  
+  .close-btn {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+  }
+  
+  .close-btn:hover,
+  .close-btn:focus {
+      color: black;
+      text-decoration: none;
+      cursor: pointer;
+  }
+  
+  .loser-announcement {
+      color: green;
+      font-size: 24px;
+  }
+  
+  .results-info {
+      color: red;
+      font-size: 20px;
+  }
+  
+  .results-count {
+      font-weight: bold;
+  }
+  
+  
+  
+  </style>
   <body>
-    <input type="text" id="username" placeholder="Enter your username" />
-    <input type="text" id="room" placeholder="Room name" />
-    <input type="checkbox" id="isHost" value="host" /> 我是房長<br />
-    <button onclick="joinRoom()">Join Room</button>
-    <ul id="messages"></ul>
-  </body>
-</html>
+    <div class="container">
+        <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
+        <h1>Lets HoDaLa!</h1>
+        <button id="create">Create Room</button>
+        <button id="join">Join Room</button>
+    </div>
+    
+    <div id="createPopup" class="popup" style="display: none;">
+      <div class="popup-content">
+          <span class="close-btn">&times;</span>
+          <h2>Create Room</h2>
+          <input id="createUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
+          <input id="createRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
+          <button id="createConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Create</button>
+      </div>
+    </div>
+    <div id="joinPopup" class="popup" style="display: none;">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h2>Join Room</h2>
+        <input id="joinUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
+        <input id="joinRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
+        <button id="joinConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Join</button>
+      </div>
+    </div>
+    </body>
+    </html>
