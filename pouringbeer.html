@@ -77,6 +77,8 @@
             rulesPopup.style.display = 'none'; // 隐藏游戏规则弹窗
             startGameButton.style.display = 'none'; // 隐藏开始游戏按钮
             gameArea.classList.remove('hidden');
+            pourButton.style.display = 'none'
+            nextTurn.style.display = 'none'
             canvas.style.display = 'block'
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             init();
