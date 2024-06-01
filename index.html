@@ -3,13 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
 <meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
 <title>LetsHoDaLa</title>
 <link rel="icon" href="images/beergame.png" type="image/x-icon">
-=======
-<title>Socket.io Rooms Example</title>
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
 <script src="socket.io.js"></script>
 <script>
   window.onload = function() {
@@ -49,11 +45,7 @@
           // 跳轉到 choose_game.html
           window.location.href = 'choose_game.html';
         }else{
-<<<<<<< HEAD
           alert('This room name is already Existed. Please try another room name.')
-=======
-          alert('Room is Existed. Please change roomname.')
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
           return
         }
       })
@@ -74,11 +66,7 @@
           // 跳轉到 choose_game.html
           window.location.href = 'choose_game.html';
         }else{
-<<<<<<< HEAD
           alert('This room name is not Existed. Please try another room name.')
-=======
-          alert('Room is not Existed. Please change roomname.')
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
           return
         }
       })
@@ -128,11 +116,6 @@
   }
 
   #create {
-<<<<<<< HEAD
-=======
-    background-color: #4CAF50; /* 绿色背景 */
-    color: white; /* 白色文字 */
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
     display: block;
     width: 200px;
     padding: 10px;
@@ -141,20 +124,12 @@
     cursor: pointer;
   }
   
-<<<<<<< HEAD
   #letshodala {
-=======
-  #goldenfinger {
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
       max-width: 30%;
       height: auto;
   }
   @media (max-width: 600px) {
-<<<<<<< HEAD
       #letshodala {
-=======
-      #goldenfinger {
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
           max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
       }
   }
@@ -227,50 +202,29 @@
   </style>
   <body>
     <div class="container">
-<<<<<<< HEAD
         <img src="images\beergame.png" alt="letshodala" id="letshodala">
         <h1>LetsHoDaLa!</h1>
         <button id="join">Join Room</button>
         <button id="create">Create Room</button>
-=======
-        <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
-        <h1>Lets HoDaLa!</h1>
-        <button id="create">Create Room</button>
-        <button id="join">Join Room</button>
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
     </div>
     
     <div id="createPopup" class="popup" style="display: none;">
       <div class="popup-content">
           <span class="close-btn">&times;</span>
-<<<<<<< HEAD
           <h2 style="text-align: center; margin-bottom:10px;">Create Room</h2>
           <h4 style="text-align: center; margin-top:0px;">Please share the Room Name to your friends</h4>
           <input id="createUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
           <input id="createRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
           <button id="createConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">CREATE</button>
-=======
-          <h2>Create Room</h2>
-          <input id="createUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
-          <input id="createRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
-          <button id="createConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Create</button>
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
       </div>
     </div>
     <div id="joinPopup" class="popup" style="display: none;">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
-<<<<<<< HEAD
         <h2 style="text-align: center;">Join Room</h2>
         <input id="joinUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
         <input id="joinRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
         <button id="joinConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">JOIN</button>
-=======
-        <h2>Join Room</h2>
-        <input id="joinUser" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Username"> 
-        <input id="joinRoom" style="font-size: 18px; display: block; margin: 20px auto; width: 80%; max-width: 300px; padding: 10px;" placeholder="Room Name"> 
-        <button id="joinConfirm" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Join</button>
->>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
       </div>
     </div>
     </body>
