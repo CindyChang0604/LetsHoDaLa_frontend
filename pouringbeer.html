@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>金手指遊戲</title>
+<meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
+<title>PouringBeer</title>
+<link rel="icon" href="images/beergame.png" type="image/x-icon">
 <script src="socket.io.js"></script>
 <script>
     // const socket = io('http://localhost:3000');
@@ -14,7 +16,7 @@
         const isHost = localStorage.getItem('isHost')==='true';
         socket.emit('joinRoom', room, username, isHost)
         socket.on('roomData', (data) => {
-            document.getElementById('user-info').textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`
+            document.getElementById('user-info').textContent = `Username: ${username}, Roomname: ${room}, Members: ${data.count}`
         });
         if (room) {
             socket.emit('getRoomHost', room);
@@ -25,17 +27,18 @@
             if (username === data.hostId) {
                 // 显示控件
                 console.log(username,data.hostId)
-                console.log("当前用户是房长");
+                console.log("當前用戶是房長");
                 document.getElementById('confirmDuration').style.display = 'block';
             } else {
                 // 隐藏控件
                 console.log(username,data.hostId)
-                console.log("当前用户不是房长");
+                console.log("當前用戶不是房長");
                 document.getElementById('confirmDuration').style.display = 'none';
             }
         });
           // 初始化 DOM 元素引用
         const startGameButton = document.getElementById('startGame');
+        const backToMenuButton = document.getElementById("backToMenu");
         const popupGame = document.getElementById('popup_game');
         const clickCounter = document.getElementById('clickCount');
         const gameArea = document.getElementById('gameArea');
@@ -76,6 +79,7 @@
             document.getElementById('gameOverPopup').style.display = 'none';
             rulesPopup.style.display = 'none'; // 隐藏游戏规则弹窗
             startGameButton.style.display = 'none'; // 隐藏开始游戏按钮
+            backToMenuButton.style.display = "none"; // 隐藏回主選單按钮
             gameArea.classList.remove('hidden');
             pourButton.style.display = 'none'
             nextTurn.style.display = 'none'
@@ -166,8 +170,11 @@
             window.location.href = 'choose_game.html'; // 导航到主菜单页面
         });
 
-        document.getElementById('backToMenu').addEventListener('click', function(event) {
-            socket.emit('backtomenu', room);
+        const allBackToMenuButtons = document.querySelectorAll(".backToMenu");
+        allBackToMenuButtons.forEach((button) => {
+          button.addEventListener("click", function (event) {
+            socket.emit("backtomenu", room);
+          });
         });
 
         
@@ -253,146 +260,166 @@
 </script>
 
 <style>
-body, html {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #f0f0f0;
-}
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
 
-#startGame {
-    background-color: #4CAF50; /* 绿色背景 */
-    color: white; /* 白色文字 */
-    display: block;
-    width: 200px;
-    padding: 10px;
-    margin: 20px auto;
-    font-size: 16px;
-    cursor: pointer;
-}
+        #startGame, #pourButton {
+            background-color: #4CAF50; /* 绿色背景 */
+            color: white; /* 白色文字 */
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 20px auto;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #backToMenu {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 20px auto;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-#goldenfinger {
-    max-width: 30%;
-    height: auto;
-}
-@media (max-width: 600px) {
-    #goldenfinger {
-        max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
-    }
-}
+        #next {
+            display: block;
+            width: 200px;
+            padding: 10px;
+            margin: 20px auto;
+            font-size: 16px;
+            cursor: pointer;
+        }
 
-#gameArea {
-    display: flex;
-    flex-direction: column;  /* 子项垂直排列 */
-    justify-content: center; /* 在主轴上居中 */
-    align-items: center;     /* 在交叉轴上居中 */
-    height: 100%;           /* 设置高度为视窗高度，或根据需要调整 */
-    width: 100%;             /* 宽度根据父容器调整 */
-}
+        #pouringbeer {
+            max-width: 30%;
+            height: auto;
+        }
+        @media (max-width: 600px) {
+            #pouringbeer {
+                max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
+            }
+        }
 
-.hidden {
-  display: none;
-}
+        #gameArea {
+            display: flex;
+            flex-direction: column;  /* 子项垂直排列 */
+            justify-content: center; /* 在主轴上居中 */
+            align-items: center;     /* 在交叉轴上居中 */
+            height: 100%;           /* 设置高度为视窗高度，或根据需要调整 */
+            width: 100%;             /* 宽度根据父容器调整 */
+        }
 
-.container {
-  text-align: center;
-  padding: 20px;
-}
+        .hidden {
+        display: none;
+        }
 
-.popup {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-}
+        .container {
+        text-align: center;
+        padding: 20px;
+        }
+
+        .popup {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
 
 
-.popup-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-    max-width: 450px;
-    max-height: 80%; /* 限制最大高度 */
-    overflow-y: auto; /* 允许纵向滚动 */
-}
+        .popup-content {
+            text-align: center;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 450px;
+            max-height: 80%; /* 限制最大高度 */
+            overflow-y: auto; /* 允许纵向滚动 */
+        }
 
-.close-btn {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
 
-.close-btn:hover,
-.close-btn:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
+        .close-btn:hover,
+        .close-btn:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
 
-.loser-announcement {
-    color: green;
-    font-size: 24px;
-}
+        .loser-announcement {
+        color: rgb(255, 94, 0);
+        font-size: 24px;
+        font-weight: bold;
+        }
 
-.results-info {
-    color: red;
-    font-size: 20px;
-}
+        .results-info {
+            color: rgb(158, 158, 158);
+            font-size: 20px;
+        }
 
-.results-count {
-    font-weight: bold;
-}
+        .results-count {
+            font-weight: bold;
+        }
 
-canvas {
-    border: 1px solid black;
-  }
+        canvas {
+            border: 1px solid black;
+        }
 
 </style>
 </head>
 <body>
 <div id="user-info" style="position: absolute; top: 10px; left: 10px; font-size: 16px;"></div>
 <div class="container">
-    <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger">
-    <h1>倒酒遊戲</h1>
-    <button id="startGame">開始遊戲</button>
+    <img src="images\pouringbeer.png" alt="pouringbeer" id="pouringbeer">
+    <h1>PouringBeer</h1>
+    <button id="startGame">Start Game</button>
+    <button id="backToMenu" class="backToMenu">Back to Menu</button>
 
     <div id="gameArea" class="hidden">
-        <canvas id="myCanvas" width="300" height="300" style="display: none;""></canvas>
-        <button id="pourButton" style="display: none;">开始倒酒</button>
-        <button id="next" style="display:none;">下一位</button>
+        <canvas id="myCanvas" width="300" height="300" style="display: none;"></canvas>
+        <button id="pourButton" style="display: none; margin-bottom: 0px">Press and hold <br>to pour the drink</button>
+        <button id="next" style="display:none;">Next player</button>
     </div>
 </div>
 <div id="rulesPopup" class="popup" style="display: none;">
   <div class="popup-content">
       <span class="close-btn">&times;</span>
-      <h2>遊戲規則</h2>
-      <p>遊戲開始時，玩家輪流倒酒，倒到滿出來的玩家就要喝酒！</p>
-      <p></p>
-      <p>點擊確認後遊戲即開始。</p>
+      <h2>Game Rules</h2>
+      <p>Players take turns pouring drinks. The player who overfills their glass must drink!</p>
+      <p>Each player has only one chance to pour.</p>
+
       <!-- 下面的只有房長有 -->
       <button id="confirmDuration" style="display: block; width: 200px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Start</button>
   </div>
 </div>
 <div id="gameOverPopup" class="popup" style="display: none;">
     <div class="popup-content">
-        <span class="close-btn">&times;</span>
-        <h2>游戏结果</h2>
+        <!-- <span class="close-btn">&times;</span> -->
+        <h2>Game Result</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div style="display: flex; justify-content: space-around;">
-            <button id="playAgain" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">再玩一次</button>
-            <button id="backToMenu" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">回主菜单</button>
+            <button id="playAgain" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Play Again</button>
+            <button id="backToMenu" class="backToMenu" style="display: block; width: 150px; padding: 10px; margin: 20px auto; font-size: 16px; cursor: pointer;">Back to Menu</button>
         </div>
     </div>
 </div>

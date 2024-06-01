@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>金手指遊戲</title>
+    <meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
+    <title>BombNumber</title>
+    <link rel="icon" href="images/beergame.png" type="image/x-icon">
     <script src="socket.io.js"></script>
     <script>
       // const socket = io('http://localhost:3000');
@@ -16,7 +18,7 @@
         socket.on("roomData", (data) => {
           document.getElementById(
             "user-info"
-          ).textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`;
+          ).textContent = `Username: ${username}, Roomname: ${room}, Members: ${data.count}`;
         });
         if (room) {
           socket.emit("getRoomHost", room);
@@ -27,17 +29,18 @@
           if (username === data.hostId) {
             // 显示控件
             console.log(username, data.hostId);
-            console.log("当前用户是房长");
+            console.log("當前用戶是房長");
             document.getElementById("confirmDuration").style.display = "block";
           } else {
             // 隐藏控件
             console.log(username, data.hostId);
-            console.log("当前用户不是房长");
+            console.log("當前用戶不是房長");
             document.getElementById("confirmDuration").style.display = "none";
           }
         });
         // 初始化 DOM 元素引用
         const startGameButton = document.getElementById("startGame");
+        const backToMenuButton = document.getElementById("backToMenu");
         const popupGame = document.getElementById("popup_game");
         const guessInput = document.getElementById("guessInput");
         const submitGuess = document.getElementById("submitGuess");
@@ -72,6 +75,7 @@
           document.getElementById("gameOverPopup").style.display = "none";
           rulesPopup.style.display = "none"; // 隐藏游戏规则弹窗
           startGameButton.style.display = "none"; // 隐藏开始游戏按钮
+          backToMenuButton.style.display = "none"; // 隐藏回主選單按钮
           gameArea.classList.remove("hidden");
           document.getElementById("min").innerText = 0;
           document.getElementById("max").innerText = 100;
@@ -91,7 +95,7 @@
           const max = parseInt(document.getElementById("max").innerText);
           guessInput.value = ""; // 清除输入框内容
           if (guess <= min || guess >= max) {
-            alert(`请输入有效的號碼 (${min}~${max})。`);
+            alert(`Please enter a valid number (${min}~${max})。`);
             return;
           }
           guessInput.style.display = "none";
@@ -135,11 +139,12 @@
           window.location.href = "choose_game.html"; // 导航到主菜单页面
         });
 
-        document
-          .getElementById("backToMenu")
-          .addEventListener("click", function (event) {
+        const allBackToMenuButtons = document.querySelectorAll(".backToMenu");
+        allBackToMenuButtons.forEach((button) => {
+          button.addEventListener("click", function (event) {
             socket.emit("backtomenu", room);
           });
+        });
       };
     </script>
 
@@ -164,13 +169,21 @@
         font-size: 16px;
         cursor: pointer;
       }
+      #backToMenu {
+        display: block;
+        width: 200px;
+        padding: 10px;
+        margin: 20px auto;
+        font-size: 16px;
+        cursor: pointer;
+      }
 
-      #goldenfinger {
+      #bombnumber {
         max-width: 30%;
         height: auto;
       }
       @media (max-width: 600px) {
-        #goldenfinger {
+        #bombnumber {
           max-width: 50%; /* 在小屏幕设备上，图片的最大宽度为 50% */
         }
       }
@@ -199,6 +212,7 @@
       }
 
       .popup-content {
+        text-align: center;
         background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
@@ -224,12 +238,13 @@
       }
 
       .loser-announcement {
-        color: green;
+        color: rgb(255, 94, 0);
         font-size: 24px;
+        font-weight: bold;
       }
 
       .results-info {
-        color: red;
+        color: rgb(158, 158, 158);
         font-size: 20px;
       }
 
@@ -250,9 +265,10 @@
       >
         3
       </div>
-      <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger" />
-      <h1>終極密碼</h1>
-      <button id="startGame">開始遊戲</button>
+      <img src="images\bombnumber.png" alt="bombnumber" id="bombnumber" />
+      <h1>BombNumber</h1>
+      <button id="startGame">Start Game</button>
+      <button id="backToMenu" class="backToMenu">Back to Menu</button>
 
       <div id="gameArea" class="hidden">
         <p id="numberRange" style="font-size: 20px">
@@ -282,19 +298,19 @@
             cursor: pointer;
           "
         >
-          Submit Guess
+          Submit Your Guess
         </button>
       </div>
     </div>
     <div id="rulesPopup" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
-        <h2>遊戲規則</h2>
-        <p>遊戲開始時，電腦會從0-100中選定一個數字，不會讓參與遊戲者得知。</p>
+        <h2>Game Rules</h2>
+        <p style="font-weight: 500;"> The system will select a number from 0~100</p>
         <p>
-          遊戲參與者輪流報一個數字，電腦會告知該密碼是在該數字之上或之下，並依據此條件縮小參與者可選數字的範圍，直至有人報出密碼，猜中的人就要喝酒！
+          Players take turns guessing a number, and the game continues until someone guesses the number correctly, and the person who guesses it must drink!
         </p>
-        <p>點擊確認後遊戲即開始。</p>
+
         <!-- 下面的只有房長有 -->
         <button
           id="confirmDuration"
@@ -313,11 +329,11 @@
     </div>
     <div id="gameOverPopup" class="popup" style="display: none">
       <div class="popup-content">
-        <span class="close-btn">&times;</span>
-        <h2>游戏结果</h2>
+        <!-- <span class="close-btn">&times;</span> -->
+        <h2>Game Result</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div id="resultsContainer" class="results-info">
-          <span>終極密碼：</span><span id="resultnumber">0</span>
+          <span>BombNumber：</span><span id="resultnumber">0</span>
         </div>
         <div style="display: flex; justify-content: space-around">
           <button
@@ -331,10 +347,11 @@
               cursor: pointer;
             "
           >
-            再玩一次
+            Play Again
           </button>
           <button
             id="backToMenu"
+            class="backToMenu"
             style="
               display: block;
               width: 150px;
@@ -344,7 +361,7 @@
               cursor: pointer;
             "
           >
-            回主菜单
+            Back to Menu
           </button>
         </div>
       </div>

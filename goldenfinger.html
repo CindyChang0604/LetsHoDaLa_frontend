@@ -3,7 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<<<<<<< HEAD
+    <meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
+    <title>GoldenFinger</title>
+    <link rel="icon" href="images/beergame.png" type="image/x-icon">
+=======
     <title>金手指遊戲</title>
+>>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
     <script src="socket.io.js"></script>
     <script>
       // const socket = io('http://localhost:3000');
@@ -16,7 +22,7 @@
         socket.on("roomData", (data) => {
           document.getElementById(
             "user-info"
-          ).textContent = `用戶名: ${username}, 房間名: ${room}, 人數: ${data.count}`;
+          ).textContent = `Username: ${username}, Roomname: ${room}, Members: ${data.count}`;
         });
         if (room) {
           socket.emit("getRoomHost", room);
@@ -27,19 +33,20 @@
           if (username === data.hostId) {
             // 显示控件
             console.log(username, data.hostId);
-            console.log("当前用户是房长");
+            console.log("當前用戶是房長");
             document.getElementById("gameDuration").style.display = "block";
             document.getElementById("confirmDuration").style.display = "block";
           } else {
             // 隐藏控件
             console.log(username, data.hostId);
-            console.log("当前用户不是房长");
+            console.log("當前用戶不是房長");
             document.getElementById("gameDuration").style.display = "none";
             document.getElementById("confirmDuration").style.display = "none";
           }
         });
         // 初始化 DOM 元素引用
         const startGameButton = document.getElementById("startGame");
+        const backToMenuButton = document.getElementById("backToMenu");
         const popupGame = document.getElementById("popup_game");
         const gameDurationInput = document.getElementById("gameDuration");
         const clickCounter = document.getElementById("clickCount");
@@ -86,7 +93,7 @@
         // 开始倒计时函数
         function startCountdown(count, duration) {
           startGameButton.style.display = "none"; // 隐藏开始游戏按钮
-          startGameButton.style.display = "none"; // 隐藏开始游戏按钮
+          backToMenuButton.style.display = "none"; // 隐藏回主選單按钮
           countdownElement.style.display = "block"; // 显示倒计时
           countdownElement.innerText = count; // 初始显示3
           let timer = setInterval(function () {
@@ -207,6 +214,15 @@
     </script>
 
     <style>
+<<<<<<< HEAD
+      body, button, input, textarea, canvas {
+          -webkit-tap-highlight-color: transparent; /* 针对Webkit/Chrome浏览器 */
+          -webkit-user-select: none; /* 禁止选中文本，针对Webkit/Chrome浏览器 */
+          -moz-user-select: none; /* 禁止选中文本，针对Firefox */
+          -ms-user-select: none; /* 禁止选中文本，针对IE */
+          user-select: none; /* 标准语法 */
+      }
+=======
 body, button, input, textarea, canvas {
     -webkit-tap-highlight-color: transparent; /* 针对Webkit/Chrome浏览器 */
     -webkit-user-select: none; /* 禁止选中文本，针对Webkit/Chrome浏览器 */
@@ -214,6 +230,7 @@ body, button, input, textarea, canvas {
     -ms-user-select: none; /* 禁止选中文本，针对IE */
     user-select: none; /* 标准语法 */
 }
+>>>>>>> 925e0dc53a3588b0c1739d689695ef02a81326d0
       body,
       html {
         height: 100%;
@@ -227,6 +244,14 @@ body, button, input, textarea, canvas {
       #startGame {
         background-color: #4caf50; /* 绿色背景 */
         color: white; /* 白色文字 */
+        display: block;
+        width: 200px;
+        padding: 10px;
+        margin: 20px auto;
+        font-size: 16px;
+        cursor: pointer;
+      }
+      #backToMenu {
         display: block;
         width: 200px;
         padding: 10px;
@@ -269,6 +294,7 @@ body, button, input, textarea, canvas {
       }
 
       .popup-content {
+        text-align:center;
         background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
@@ -294,12 +320,13 @@ body, button, input, textarea, canvas {
       }
 
       .loser-announcement {
-        color: green;
+        color: rgb(255, 94, 0);
         font-size: 24px;
+        font-weight: bold;
       }
 
       .results-info {
-        color: red;
+        color: rgb(158, 158, 158);
         font-size: 20px;
       }
 
@@ -327,18 +354,20 @@ body, button, input, textarea, canvas {
       <button id="backToMenu" class="backToMenu">Back to Menu</button>
 
       <div id="gameArea" class="hidden">
-        <p style="font-size: 20px">點擊次數: <span id="clickCount">0</span></p>
+        <p style="font-size: 20px">Clicks: <span id="clickCount">0</span></p>
       </div>
     </div>
 
     <div id="rulesPopup" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
-        <h2>遊戲規則</h2>
+        <h2>Game Rules</h2>
         <p>
-          這是一個點擊遊戲，請在指定的時間內運用你的「金手指」努力點擊螢幕，點擊次數最少的輸家喝酒！
+          This is a "TAPPING GAME". Please use your 'Golden finger' to tap the screen as fast as you can. The player with the fewest taps DRINKS!
         </p>
-        <p>請由房長決定遊戲時長，點擊確認後遊戲即開始。</p>
+        <p style="font-weight: 500;">
+          The Room Leader will decide Game Duration
+        </p>
         <!-- 下面的只有房長有 -->
         <input
           type="number"
@@ -351,7 +380,7 @@ body, button, input, textarea, canvas {
             max-width: 300px;
             padding: 10px;
           "
-          placeholder="請輸入遊戲秒數1~100秒"
+          placeholder="Game duration: 1~100 sec."
         />
         <button
           id="confirmDuration"
@@ -370,11 +399,11 @@ body, button, input, textarea, canvas {
     </div>
     <div id="gameOverPopup" class="popup" style="display: none">
       <div class="popup-content">
-        <span class="close-btn">&times;</span>
-        <h2>遊戲結果</h2>
+        <!-- <span class="close-btn">&times;</span> -->
+        <h2>Game Result</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div id="resultsContainer" class="results-info">
-          <span>點擊次數：</span><span class="results-count">0</span>次
+          <span>Number of clicks：</span><span class="results-count">0</span>Times
         </div>
         <div style="display: flex; justify-content: space-around">
           <button
@@ -388,7 +417,7 @@ body, button, input, textarea, canvas {
               cursor: pointer;
             "
           >
-            再玩一次
+            Play Again
           </button>
           <button
             id="backToMenu"
@@ -402,7 +431,7 @@ body, button, input, textarea, canvas {
               cursor: pointer;
             "
           >
-            回主菜单
+            Back to Menu
           </button>
         </div>
       </div>
