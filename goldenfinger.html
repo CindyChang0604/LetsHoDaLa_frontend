@@ -89,7 +89,7 @@
         socket.on("gameStarted", (duration) => {
           lastDuration = duration; // 保存游戏时长
           rulesPopup.style.display = "none"; // 隐藏游戏规则弹窗
-          startCountdown(3, duration);
+          startCountdown(5, duration);
         });
 
         // 开始倒计时函数
@@ -213,6 +213,18 @@
           });
         });
       };
+      //房長沒填寫遊戲時間的alert
+      document
+        .getElementById("confirmDuration")
+        .addEventListener("click", function () {
+          var duration = document.getElementById("gameDuration").value;
+          if (duration === "") {
+            alert("Please input the game duration.");
+          } else {
+            // 這裡可以添加其他需要執行的代碼，例如開始遊戲
+            console.log("遊戲時間設置為：" + duration + " 秒");
+          }
+        });
     </script>
 
     <style>
@@ -277,6 +289,7 @@
         justify-content: center;
         align-items: center;
         background-color: #f0f0f0;
+        font-family: Roboto, sans-serif;
       }
 
       #startGame,
@@ -330,7 +343,7 @@
         position: fixed;
         z-index: 1;
         left: 0;
-        top: 0;
+        top: 60px;
         width: 100%;
         height: 100%;
         overflow: auto;
@@ -365,7 +378,7 @@
 
       .loser-announcement {
         color: rgb(255, 94, 0);
-        font-size: 24px;
+        font-size: 26px;
         font-weight: bold;
       }
 
@@ -392,7 +405,7 @@
       id="user-info"
       style="
         position: absolute;
-        top: 90px;
+        top: 70px;
         left: 50%;
         transform: translateX(-50%);
         font-size: 16px;
@@ -409,10 +422,10 @@
         id="countdown"
         style="font-size: 48px; text-align: center; display: none"
       >
-        3
+        5
       </div>
       <img src="images\goldenfinger.png" alt="goldenfinger" id="goldenfinger" />
-      <h1>GoldenFinger</h1>
+      <h1 style="font-family: Roboto, sans-serif">GoldenFinger</h1>
       <button id="startGame">Start Game</button>
       <button id="backToMenu" class="backToMenu">Back to Menu</button>
 
@@ -424,12 +437,12 @@
     <div id="rulesPopup" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
-        <h2>Game Rules</h2>
-        <p>
+        <h2 style="font-family: Roboto, sans-serif">Game Rules</h2>
+        <p style="font-family: Roboto, sans-serif">
           This is a "TAPPING GAME". Please use your 'Golden finger' to tap the
           screen as fast as you can. The player with the fewest taps DRINKS!
         </p>
-        <p style="font-weight: 500">
+        <p style="font-weight: 500; font-family: Roboto, sans-serif">
           The Room Leader will decide Game Duration.
         </p>
         <!-- 下面的只有房長有 -->
