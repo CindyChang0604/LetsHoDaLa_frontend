@@ -8,7 +8,9 @@
       content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!"
     />
     <title>PouringBeer</title>
-    <link rel="icon" type="image/png" href="images/beergame.png" />
+    <link href="images/beergame.png" rel="icon" sizes="16x16" />
+    <link href="images/beergame.png" rel="icon" sizes="32x32" />
+    <link href="images/beergame.png" rel="apple-touch-icon" sizes="180x180" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
@@ -324,6 +326,7 @@
         justify-content: center;
         align-items: center;
         background-color: #f0f0f0;
+        font-family: Roboto, sans-serif;
       }
 
       #startGame,
@@ -340,7 +343,8 @@
         cursor: pointer;
       }
       #backToMenu,
-      #confirmDuration {
+      #confirmDuration,
+      #next {
         background-color: #f0f0f0; /* 绿色背景 */
         color: black; /* 白色文字 */
         border-color: rgb(203, 203, 203);
@@ -487,8 +491,32 @@
           style="display: none"
         ></canvas>
         <div style="display: flex; justify-content: space-around">
-          <button id="pourButton" style="display: none">Press and hold</button>
-          <button id="next" style="display: none">Next player</button>
+          <button
+            id="pourButton"
+            style="
+              display: block;
+              width: 150px;
+              padding: 10px;
+              margin: 20px auto;
+              font-size: 16px;
+              cursor: pointer;
+            "
+          >
+            Press and hold
+          </button>
+          <button
+            id="next"
+            style="
+              display: block;
+              width: 150px;
+              padding: 10px;
+              margin: 20px auto;
+              font-size: 16px;
+              cursor: pointer;
+            "
+          >
+            Next player
+          </button>
         </div>
       </div>
     </div>
@@ -512,8 +540,33 @@
         <h2 style="font-size: 20px">Game Result</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div style="display: flex; justify-content: space-around">
-          <button id="playAgain">Play Again</button>
-          <button id="backToMenu" class="backToMenu">Back to Menu</button>
+          <button
+            id="playAgain"
+            style="
+              display: block;
+              width: 150px;
+              padding: 10px;
+              margin: 20px auto;
+              font-size: 16px;
+              cursor: pointer;
+            "
+          >
+            Play Again
+          </button>
+          <button
+            id="backToMenu"
+            class="backToMenu"
+            style="
+              display: block;
+              width: 150px;
+              padding: 10px;
+              margin: 20px auto;
+              font-size: 16px;
+              cursor: pointer;
+            "
+          >
+            Back to Menu
+          </button>
         </div>
       </div>
     </div>
