@@ -3,11 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
+    <meta
+      name="description"
+      content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!"
+    />
     <title>LetsHoDaLa</title>
-    <link rel="icon" href="images/beergame.png" type="image/x-icon">
+    <link rel="icon" href="images/beergame.png" type="image/x-icon" />
     <script src="socket.io.js"></script>
-  
 
     <script>
       window.onload = function () {
@@ -18,18 +20,18 @@
         const isHost = localStorage.getItem("isHost") === "true";
         console.log(typeof isHost, isHost);
 
-        if (isHost){
-                document.getElementById('HostPopup').style.display = 'block'
-            }else{
-                document.getElementById('MemberPopup').style.display = 'block'
-            }
+        if (isHost) {
+          document.getElementById("HostPopup").style.display = "block";
+        } else {
+          document.getElementById("MemberPopup").style.display = "block";
+        }
 
-            document.querySelectorAll('.close-btn').forEach(button => {
-                button.addEventListener('click', function() {
-                    this.parentElement.parentElement.style.display = 'none'; // 隐藏弹窗
-                });
-            });
-        
+        document.querySelectorAll(".close-btn").forEach((button) => {
+          button.addEventListener("click", function () {
+            this.parentElement.parentElement.style.display = "none"; // 隐藏弹窗
+          });
+        });
+
         socket.emit("joinRoom", room, username, isHost);
         // 假設房間人數（需要從服務器獲取）
         socket.on("roomData", (data) => {
@@ -90,7 +92,7 @@
       .header {
         background-color: white; /* 白色背景 */
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 灰色下方陰影 */
-        padding: 15px; /* 內邊距 */
+        padding: 10px; /* 內邊距 */
         display: flex; /* 使用 flex 布局 */
         justify-content: center; /* 水平置中內容 */
         align-items: center; /* 垂直置中內容 */
@@ -108,16 +110,17 @@
 
       /* 正方形圖片的樣式 */
       .logo {
-        width: 50px; /* 設定寬度 */
-        height: 50px; /* 設定高度，使其為正方形 */
+        width: 40px; /* 設定寬度 */
+        height: 40px; /* 設定高度，使其為正方形 */
         margin-right: 10px; /* 圖片和文字之間的間距 */
       }
 
       /* 標題文字的樣式 */
       .title {
-        font-size: 24px; /* 文字大小 */
+        font-size: 20px; /* 文字大小 */
         font-weight: bold; /* 文字粗細 */
         color: black; /* 文字顏色 */
+        font-family: Roboto, sans-serif;
       }
 
       .spacer {
@@ -183,7 +186,7 @@
         color: #333; /* 字体颜色 */
         font-weight: bold;
       }
-      
+
       .popup {
         display: flex;
         justify-content: center;
@@ -196,10 +199,9 @@
         height: 100%;
         overflow: auto;
         background-color: rgba(0, 0, 0, 0.4);
-    }
+      }
 
-
-    .popup-content {
+      .popup-content {
         background-color: #fefefe;
         margin: 25% auto;
         padding: 20px;
@@ -207,23 +209,23 @@
         width: 80%;
         max-width: 450px;
         text-align: center;
-    }
+      }
 
-    .close-btn {
+      .close-btn {
         color: #aaa;
         float: right;
         font-size: 28px;
         font-weight: bold;
         position: relative;
         top: -10px;
-    }
+      }
 
-    .close-btn:hover,
-    .close-btn:focus {
+      .close-btn:hover,
+      .close-btn:focus {
         color: black;
         text-decoration: none;
         cursor: pointer;
-    }
+      }
     </style>
   </head>
   <body>
@@ -290,17 +292,19 @@
       </div>
     </section>
 
-    <div id="HostPopup" class="popup" style="display: none;">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <h3 style="margin-top:25px;">Wait for all members to join the room before selecting a game!</h3>
-        </div>
+    <div id="HostPopup" class="popup" style="display: none">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h3 style="margin-top: 25px">
+          Wait for all members to join the room before selecting a game!
+        </h3>
+      </div>
     </div>
-    <div id="MemberPopup" class="popup" style="display: none;">
-        <div class="popup-content">
-            <span class="close-btn">&times;</span>
-            <h3 style="margin-top:25px;">Waiting for all members to enter.</h3>
-        </div>
+    <div id="MemberPopup" class="popup" style="display: none">
+      <div class="popup-content">
+        <span class="close-btn">&times;</span>
+        <h3 style="margin-top: 25px">Waiting for all members to enter.</h3>
+      </div>
     </div>
     <div class="spacer_bottom"></div>
   </body>

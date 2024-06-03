@@ -24,7 +24,7 @@
         socket.on("roomData", (data) => {
           document.getElementById(
             "user-info"
-          ).textContent = `Username: ${username}, Roomname: ${room}, Members: ${data.count}`;
+          ).textContent = `🙋: ${username}｜🏠: ${room}｜👫: ${data.count}`;
         });
         if (room) {
           socket.emit("getRoomHost", room);
@@ -220,7 +220,7 @@
       .header {
         background-color: white; /* 白色背景 */
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 灰色下方陰影 */
-        padding: 15px; /* 內邊距 */
+        padding: 10px; /* 內邊距 */
         display: flex; /* 使用 flex 布局 */
         justify-content: center; /* 水平置中內容 */
         align-items: center; /* 垂直置中內容 */
@@ -238,16 +238,17 @@
 
       /* 正方形圖片的樣式 */
       .logo {
-        width: 50px; /* 設定寬度 */
-        height: 50px; /* 設定高度，使其為正方形 */
+        width: 40px; /* 設定寬度 */
+        height: 40px; /* 設定高度，使其為正方形 */
         margin-right: 10px; /* 圖片和文字之間的間距 */
       }
 
       /* 標題文字的樣式 */
       .title {
-        font-size: 24px; /* 文字大小 */
+        font-size: 20px; /* 文字大小 */
         font-weight: bold; /* 文字粗細 */
         color: black; /* 文字顏色 */
+        font-family: Roboto, sans-serif;
       }
 
       .spacer {
@@ -278,9 +279,11 @@
         background-color: #f0f0f0;
       }
 
-      #startGame {
+      #startGame,
+      #playAgain {
         background-color: #4caf50; /* 绿色背景 */
-        color: white; /* 白色文字 */
+        color: #ffffff; /* 白色文字 */
+        border-color: black;
         display: block;
         width: 200px;
         padding: 10px;
@@ -288,7 +291,11 @@
         font-size: 16px;
         cursor: pointer;
       }
-      #backToMenu {
+      #backToMenu,
+      #confirmDuration {
+        background-color: #f0f0f0; /* 绿色背景 */
+        color: black; /* 白色文字 */
+        border-color: rgb(203, 203, 203);
         display: block;
         width: 200px;
         padding: 10px;
@@ -385,16 +392,15 @@
       id="user-info"
       style="
         position: absolute;
-        top: 90px; /* Adjust this to be below the header */
-        left: 10px;
+        top: 90px;
+        left: 50%;
+        transform: translateX(-50%);
         font-size: 16px;
-        padding: 10px 20px;
-        /* background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border: 1px solid #ccc; */
         font-family: Arial, sans-serif;
         color: #333;
+        text-align: center;
+        width: calc(100% - 40px); /* Adjust this to fit within your container */
+        max-width: 600px; /* Optional: to limit the width */
       "
     ></div>
     <div id="leaderboard"></div>
@@ -424,7 +430,7 @@
           screen as fast as you can. The player with the fewest taps DRINKS!
         </p>
         <p style="font-weight: 500">
-          The Room Leader will decide Game Duration
+          The Room Leader will decide Game Duration.
         </p>
         <!-- 下面的只有房長有 -->
         <input
