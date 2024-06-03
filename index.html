@@ -8,7 +8,11 @@
       content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!"
     />
     <title>LetsHoDaLa</title>
-    <link rel="icon" href="images/beergame.png" type="image/x-icon" />
+    <link rel="icon" type="image/png" href="images/beergame.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="socket.io.js"></script>
     <script>
       window.onload = function () {
@@ -98,19 +102,6 @@
           });
         });
       };
-      //若沒有填寫username或是roomname任一欄位跳出的alert
-
-      //要跳出頁面都跳alert
-      window.addEventListener("beforeunload", function (event) {
-        // 自訂提示訊息
-        var message = "Are you sure to quit the game?";
-
-        // 設定事件的 returnValue 屬性
-        event.returnValue = message;
-
-        // 將訊息作為返回值
-        return message;
-      });
     </script>
   </head>
   <style>
@@ -137,6 +128,7 @@
     }
 
     #create,
+    #createConfirm,
     #joinConfirm {
       background-color: #f0f0f0; /* 绿色背景 */
       color: black; /* 白色文字 */
@@ -262,19 +254,7 @@
           placeholder="Room Name"
           required
         />
-        <button
-          id="createConfirm"
-          style="
-            display: block;
-            width: 200px;
-            padding: 10px;
-            margin: 20px auto;
-            font-size: 16px;
-            cursor: pointer;
-          "
-        >
-          CREATE
-        </button>
+        <button id="createConfirm">CREATE</button>
       </div>
     </div>
     <div id="joinPopup" class="popup" style="display: none">

@@ -202,10 +202,12 @@
         justify-content: center;
         align-items: center;
         background-color: #f0f0f0;
+        font-family: Roboto, sans-serif;
       }
 
       #startGame,
-      #playAgain {
+      #playAgain,
+      #submitGuess {
         background-color: #4caf50; /* 绿色背景 */
         color: #ffffff; /* 白色文字 */
         border-color: black;
@@ -216,7 +218,8 @@
         font-size: 16px;
         cursor: pointer;
       }
-      #backToMenu {
+      #backToMenu,
+      #confirmDuration {
         background-color: #f0f0f0; /* 绿色背景 */
         color: black; /* 白色文字 */
         border-color: rgb(203, 203, 203);
@@ -254,7 +257,7 @@
         position: fixed;
         z-index: 1;
         left: 0;
-        top: 0;
+        top: 60px;
         width: 100%;
         height: 100%;
         overflow: auto;
@@ -317,15 +320,14 @@
       style="
         position: absolute;
         top: 70px;
-        left: 10px;
+        left: 50%;
+        transform: translateX(-50%);
         font-size: 16px;
-        padding: 10px 20px;
-        /* background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border: 1px solid #ccc; */
         font-family: Arial, sans-serif;
         color: #333;
+        text-align: center;
+        width: calc(100% - 40px); /* Adjust this to fit within your container */
+        max-width: 600px; /* Optional: to limit the width */
       "
     ></div>
     <div class="container">
@@ -357,26 +359,14 @@
           "
           placeholder="Enter your guess"
         />
-        <button
-          id="submitGuess"
-          style="
-            display: none;
-            width: 200px;
-            padding: 10px;
-            margin: 20px auto;
-            font-size: 16px;
-            cursor: pointer;
-          "
-        >
-          Submit Your Guess
-        </button>
+        <button id="submitGuess">Submit Your Guess</button>
       </div>
     </div>
     <div id="rulesPopup" class="popup" style="display: none">
       <div class="popup-content">
         <span class="close-btn">&times;</span>
         <h2>Game Rules</h2>
-        <p style="font-weight: 500">
+        <p style="font-weight: 600">
           The system will select a number from 0~100
         </p>
         <p>
@@ -386,19 +376,7 @@
         </p>
 
         <!-- 下面的只有房長有 -->
-        <button
-          id="confirmDuration"
-          style="
-            display: block;
-            width: 200px;
-            padding: 10px;
-            margin: 20px auto;
-            font-size: 16px;
-            cursor: pointer;
-          "
-        >
-          Start
-        </button>
+        <button id="confirmDuration">Start</button>
       </div>
     </div>
     <div id="gameOverPopup" class="popup" style="display: none">
