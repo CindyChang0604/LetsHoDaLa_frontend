@@ -2,10 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <meta
+      name="description"
+      content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!"
+    />
     <title>GoldenFinger</title>
-    <link rel="icon" href="images/beergame.png" type="image/x-icon">
+    <link rel="icon" href="images/beergame.png" type="image/x-icon" />
     <script src="socket.io.js"></script>
     <script>
       // const socket = io('http://localhost:3000');
@@ -70,7 +76,7 @@
         confirmDurationButton.addEventListener("click", function () {
           const duration = parseInt(gameDurationInput.value);
           if (duration < 1 || duration > 100) {
-            alert("请输入有效的秒数 (1~100)。");
+            alert("Please enter valid number (1~100)。");
             return;
           }
 
@@ -122,7 +128,7 @@
 
           // 给整个文档添加点击事件监听器
           document.addEventListener("click", incrementCounter);
-          
+
           // 在指定的游戏时间后结束游戏
           setTimeout(() => {
             endGame();
@@ -210,12 +216,57 @@
     </script>
 
     <style>
-      body, button, input, textarea, canvas {
-          -webkit-tap-highlight-color: transparent; /* 针对Webkit/Chrome浏览器 */
-          -webkit-user-select: none; /* 禁止选中文本，针对Webkit/Chrome浏览器 */
-          -moz-user-select: none; /* 禁止选中文本，针对Firefox */
-          -ms-user-select: none; /* 禁止选中文本，针对IE */
-          user-select: none; /* 标准语法 */
+      /* 頁面頂部白色 div 的樣式 */
+      .header {
+        background-color: white; /* 白色背景 */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 灰色下方陰影 */
+        padding: 15px; /* 內邊距 */
+        display: flex; /* 使用 flex 布局 */
+        justify-content: center; /* 水平置中內容 */
+        align-items: center; /* 垂直置中內容 */
+        position: fixed; /* 固定在頁面頂部 */
+        top: 0;
+        width: 100%;
+        z-index: 1000; /* 確保在所有內容之上 */
+      }
+
+      /* 內容區域的樣式 */
+      .content {
+        display: flex; /* 使用 flex 布局 */
+        align-items: center; /* 垂直置中內容 */
+      }
+
+      /* 正方形圖片的樣式 */
+      .logo {
+        width: 50px; /* 設定寬度 */
+        height: 50px; /* 設定高度，使其為正方形 */
+        margin-right: 10px; /* 圖片和文字之間的間距 */
+      }
+
+      /* 標題文字的樣式 */
+      .title {
+        font-size: 24px; /* 文字大小 */
+        font-weight: bold; /* 文字粗細 */
+        color: black; /* 文字顏色 */
+      }
+
+      .spacer {
+        height: 100px; /* 根據 header 的高度設置 */
+      }
+      .spacer_bottom {
+        height: 30px; /* 根據 header 的高度設置 */
+      }
+
+      body,
+      button,
+      input,
+      textarea,
+      canvas {
+        -webkit-tap-highlight-color: transparent; /* 针对Webkit/Chrome浏览器 */
+        -webkit-user-select: none; /* 禁止选中文本，针对Webkit/Chrome浏览器 */
+        -moz-user-select: none; /* 禁止选中文本，针对Firefox */
+        -ms-user-select: none; /* 禁止选中文本，针对IE */
+        user-select: none; /* 标准语法 */
       }
       body,
       html {
@@ -280,7 +331,7 @@
       }
 
       .popup-content {
-        text-align:center;
+        text-align: center;
         background-color: #fefefe;
         margin: 15% auto;
         padding: 20px;
@@ -322,9 +373,29 @@
     </style>
   </head>
   <body>
+    <div class="header">
+      <div class="content">
+        <img src="images/beergame.png" alt="Logo" class="logo" />
+        <span class="title">LetsHoDaLa</span>
+      </div>
+    </div>
+    <div class="spacer"></div>
+
     <div
       id="user-info"
-      style="position: absolute; top: 10px; left: 10px; font-size: 16px"
+      style="
+        position: absolute;
+        top: 90px; /* Adjust this to be below the header */
+        left: 10px;
+        font-size: 16px;
+        padding: 10px 20px;
+        /* background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ccc; */
+        font-family: Arial, sans-serif;
+        color: #333;
+      "
     ></div>
     <div id="leaderboard"></div>
     <div class="container">
@@ -349,9 +420,10 @@
         <span class="close-btn">&times;</span>
         <h2>Game Rules</h2>
         <p>
-          This is a "TAPPING GAME". Please use your 'Golden finger' to tap the screen as fast as you can. The player with the fewest taps DRINKS!
+          This is a "TAPPING GAME". Please use your 'Golden finger' to tap the
+          screen as fast as you can. The player with the fewest taps DRINKS!
         </p>
-        <p style="font-weight: 500;">
+        <p style="font-weight: 500">
           The Room Leader will decide Game Duration
         </p>
         <!-- 下面的只有房長有 -->
@@ -389,7 +461,8 @@
         <h2>Game Result</h2>
         <p id="loserAnnouncement" class="loser-announcement"></p>
         <div id="resultsContainer" class="results-info">
-          <span>Number of clicks：</span><span class="results-count">0</span>Times
+          <span>Number of clicks：</span
+          ><span class="results-count">0</span>Times
         </div>
         <div style="display: flex; justify-content: space-around">
           <button
