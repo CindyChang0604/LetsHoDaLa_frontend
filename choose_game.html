@@ -8,7 +8,11 @@
       content="This is a drinking game suitable for all ages that breaks spatial limitations. It offers a variety of games to choose from, and the first person to get drunk loses!"
     />
     <title>LetsHoDaLa</title>
-    <link rel="icon" href="images/beergame.png" type="image/x-icon" />
+    <link rel="icon" type="image/png" href="images/beergame.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
     <script src="socket.io.js"></script>
 
     <script>
@@ -37,7 +41,7 @@
         socket.on("roomData", (data) => {
           document.getElementById(
             "user-info"
-          ).textContent = `Username: ${username}, Roomname: ${room}, Members: ${data.count}`;
+          ).textContent = `🙋: ${username}｜🏠: ${room}｜👫: ${data.count}`;
         });
 
         if (room) {
