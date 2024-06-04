@@ -19,11 +19,12 @@
 
     <script>
       window.onload = function () {
-        // const socket = io('http://localhost:3000');
+        //const socket = io('http://localhost:8080');
         const socket = io("https://letshodala-backend.zeabur.app");
         const username = localStorage.getItem("username");
         const room = localStorage.getItem("room");
         const isHost = localStorage.getItem("isHost") === "true";
+        let shouldWarn = true;  // 默认情况下显示提醒
         console.log(typeof isHost, isHost);
 
         if (isHost) {
@@ -89,9 +90,25 @@
           });
 
         socket.on("navigate", (target) => {
+          shouldWarn = false;  // 设置标志为 false，不显示退出提醒
           window.location.href = target;
         });
-      };
+        window.addEventListener('popstate', function () {
+          if (!confirm('Are You Sure To Quit The Game?')) {
+            history.pushState(null, null, window.location.href);  // 恢復原狀
+          }
+        });
+        
+        // 初始化，防止在首次加載時即觸發popstate事件
+        
+        window.addEventListener('beforeunload', function (e) {
+          e.preventDefault(); // 阻止默認行為
+          if (shouldWarn) {
+            e.returnValue = 'Are You Sure To Quit The Game?'; // 根據標準，設置 returnValue
+            return 'Are You Sure To Quit The Game?'; // 顯示的訊息
+          }
+        });
+        };
     </script>
     <style>
       /* 頁面頂部白色 div 的樣式 */
@@ -243,7 +260,10 @@
     </div>
     <div class="spacer"></div>
 
-    <div
+    
+
+    <section>
+      <div
       id="user-info"
       style="
         position: absolute;
@@ -258,8 +278,6 @@
         max-width: 600px; /* Optional: to limit the width */
       "
     ></div>
-
-    <section>
       <h2>Drunk Level：High</h2>
       <div class="game-section">
         <div class="game">
