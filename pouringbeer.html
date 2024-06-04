@@ -20,22 +20,22 @@
       //const socket = io('http://localhost:8080');
       const socket = io("https://letshodala-backend.zeabur.app");
       window.onload = function () {
-        let shouldWarn = true;
-        window.addEventListener("popstate", function () {
-          if (!confirm("Are You Sure To Quit The Game?")) {
-            history.pushState(null, null, window.location.href); // 恢復原狀
-          }
-        });
+        //let shouldWarn = true;
+        //window.addEventListener("popstate", function () {
+          //if (!confirm("Are You Sure To Quit The Game?")) {
+            //history.pushState(null, null, window.location.href); // 恢復原狀
+          //}
+        //});
 
         // 初始化，防止在首次加載時即觸發popstate事件
 
-        window.addEventListener("beforeunload", function (e) {
-          e.preventDefault(); // 阻止默認行為
-          if (shouldWarn) {
-            e.returnValue = "Are You Sure To Quit The Game?"; // 根據標準，設置 returnValue
-            return "Are You Sure To Quit The Game?"; // 顯示的訊息
-          }
-        });
+        //window.addEventListener("beforeunload", function (e) {
+          //e.preventDefault(); // 阻止默認行為
+          //if (shouldWarn) {
+            //e.returnValue = "Are You Sure To Quit The Game?"; // 根據標準，設置 returnValue
+            //return "Are You Sure To Quit The Game?"; // 顯示的訊息
+          //}
+        //});
         const username = localStorage.getItem("username");
         const room = localStorage.getItem("room");
         const isHost = localStorage.getItem("isHost") === "true";
