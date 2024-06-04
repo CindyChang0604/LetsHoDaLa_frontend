@@ -18,7 +18,7 @@
     <script src="socket.io.js"></script>
     <script>
       window.onload = function () {
-        //const socket = io('http://localhost:3000');
+        //const socket = io('http://localhost:8080');
         const socket = io("https://letshodala-backend.zeabur.app");
         const create = document.getElementById("create");
         const createUser = document.getElementById("createUser");
@@ -44,6 +44,10 @@
           username = createUser.value;
           room = createRoom.value;
           isHost = true;
+          if (username === '' || room === ''){
+            alert('填入房名及名稱')
+            return
+          }
           socket.emit("Createroom", room);
           socket.on("CreateroomExist", (yesno) => {
             if (yesno) {
@@ -66,36 +70,29 @@
           username = joinUser.value;
           room = joinRoom.value;
           isHost = false;
-          socket.emit("Joinroom", room);
-          socket.on("JoinroomExist", (yesno) => {
-            if (!yesno) {
+          if (username === '' || room === ''){
+            alert('填入房名及名稱')
+            return
+          }
+          socket.emit("Joinroom", room, username);
+          socket.on('roomNotexist', () => {
+            alert("This room name is not Existed. Please try another room name.");
+            return;
+          })
+          socket.on("JoinroomExist", (nameexist) => {
+            if (!nameexist) {
               localStorage.setItem("username", username);
               localStorage.setItem("room", room);
               localStorage.setItem("isHost", isHost); // 儲存是否為房長
 
               // 跳轉到 choose_game.html
               window.location.href = "choose_game.html";
-            } else {
-              alert(
-                "This room name is not Existed. Please try another room name."
-              );
+            } else{
+              alert('已有相同名稱，請更改名稱') ;
               return;
             }
-          });
+          })
         });
-        //function joinRoom() {
-        //const username = document.getElementById('username').value;
-        ///const room = document.getElementById('room').value;
-        //const isHost = document.getElementById('isHost').checked;
-        //console.log(typeof(isHost),isHost)
-        // 儲存用戶名稱和房間名稱到本地存儲
-        //localStorage.setItem('username', username);
-        //localStorage.setItem('room', room);
-        //localStorage.setItem('isHost', isHost); // 儲存是否為房長
-
-        // 跳轉到 choose_game.html
-        //window.location.href = 'choose_game.html';
-        //}
 
         // 关闭弹窗按钮点击事件
         document.querySelectorAll(".close-btn").forEach((button) => {
