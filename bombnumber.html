@@ -121,7 +121,7 @@
           document.getElementById("playing").style.display = "block";
           document.getElementById(
             "playing"
-          ).innerText = `${player} is guessing.`;
+          ).innerText = `(${player} is guessing.)`;
         });
 
         // 开始游戏逻辑
@@ -253,6 +253,7 @@
         cursor: pointer;
       }
       #backToMenu,
+      #backToMenu2,
       #confirmDuration {
         background-color: #f0f0f0; /* 绿色背景 */
         color: black; /* 白色文字 */
@@ -358,6 +359,7 @@
           font-family: Arial, sans-serif;
           color: #333;
           text-align: center;
+          margin-bottom: 10px;
           width: calc(
             100% - 40px
           ); /* Adjust this to fit within your container */

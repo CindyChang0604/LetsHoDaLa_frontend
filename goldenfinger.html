@@ -24,24 +24,28 @@
       const socket = io("https://letshodala-backend.zeabur.app");
       window.onload = function () {
         let shouldWarn = true;
-        window.addEventListener('popstate', function () {
-          if (!confirm('Are You Sure To Quit The Game?')) {
-            history.pushState(null, null, window.location.href);  // 恢復原狀
+        window.addEventListener("popstate", function () {
+          if (!confirm("Are You Sure To Quit The Game?")) {
+            history.pushState(null, null, window.location.href); // 恢復原狀
           }
         });
-        
+
         // 初始化，防止在首次加載時即觸發popstate事件
-        
-        window.addEventListener('beforeunload', function (e) {
+
+        window.addEventListener("beforeunload", function (e) {
           e.preventDefault(); // 阻止默認行為
           if (shouldWarn) {
-            e.returnValue = 'Are You Sure To Quit The Game?'; // 根據標準，設置 returnValue
-            return 'Are You Sure To Quit The Game?'; // 顯示的訊息
+            e.returnValue = "Are You Sure To Quit The Game?"; // 根據標準，設置 returnValue
+            return "Are You Sure To Quit The Game?"; // 顯示的訊息
           }
         });
-        document.addEventListener('dblclick', function(event) {
-          event.preventDefault();  // 防止事件的默認行為
-        }, { passive: false });
+        document.addEventListener(
+          "dblclick",
+          function (event) {
+            event.preventDefault(); // 防止事件的默認行為
+          },
+          { passive: false }
+        );
         const username = localStorage.getItem("username");
         const room = localStorage.getItem("room");
         const isHost = localStorage.getItem("isHost") === "true";
@@ -63,16 +67,16 @@
             console.log("當前用戶是房長");
             document.getElementById("gameDuration").style.display = "block";
             document.getElementById("confirmDuration").style.display = "block";
-            document.getElementById('playAgain').style.display = 'block';
-            document.getElementById('backToMenu2').style.display = 'block';
+            document.getElementById("playAgain").style.display = "block";
+            document.getElementById("backToMenu2").style.display = "block";
           } else {
             // 隐藏控件
             console.log(username, data.hostId);
             console.log("當前用戶不是房長");
             document.getElementById("gameDuration").style.display = "none";
             document.getElementById("confirmDuration").style.display = "none";
-            document.getElementById('playAgain').style.display = 'none';
-            document.getElementById('backToMenu2').style.display = 'none';
+            document.getElementById("playAgain").style.display = "none";
+            document.getElementById("backToMenu2").style.display = "none";
           }
         });
         // 初始化 DOM 元素引用
@@ -83,7 +87,8 @@
         const clickCounter = document.getElementById("clickCount");
         const gameArea = document.getElementById("gameArea");
         const rulesPopup = document.getElementById("rulesPopup"); // 游戏规则的弹窗
-        const confirmDurationButton = document.getElementById("confirmDuration"); // 确认游戏时间按钮
+        const confirmDurationButton =
+          document.getElementById("confirmDuration"); // 确认游戏时间按钮
         const countdownElement = document.getElementById("countdown"); // 倒计时显示元素
 
         let lastDuration = 60; // 默认值，或从用户设置中获取
@@ -107,9 +112,9 @@
             alert("Please enter valid number (1~100)。");
             return;
           }
-          if (duration.trim() === '' || isNaN(duration)){
-            alert('Please enter number (1~100).')
-            return
+          if (duration.trim() === "" || isNaN(duration)) {
+            alert("Please enter number (1~100).");
+            return;
           }
 
           gameDurationInput.value = ""; // 清除输入框内容
@@ -232,7 +237,7 @@
         socket.on("back", () => {
           event.stopPropagation(); // 阻止事件冒泡
           document.getElementById("gameOverPopup").style.display = "none";
-          shouldWarn = false;  // 设置标志为 false，不显示退出提醒
+          shouldWarn = false; // 设置标志为 false，不显示退出提醒
           //localStorage.setItem('username', username);
           //localStorage.setItem('room', room);
           //localStorage.setItem('isHost', isHost); // 儲存是否為房長
@@ -326,6 +331,7 @@
         cursor: pointer;
       }
       #backToMenu,
+      #backToMenu2,
       #confirmDuration {
         background-color: #f0f0f0; /* 绿色背景 */
         color: black; /* 白色文字 */
@@ -422,19 +428,22 @@
     </div>
     <div class="container">
       <div
-      id="user-info"
-      style="
-        position: relative;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 16px;
-        font-family: Arial, sans-serif;
-        color: #333;
-        text-align: center;
-        width: calc(100% - 40px); /* Adjust this to fit within your container */
-        max-width: 600px; /* Optional: to limit the width */
-      "
-    ></div>
+        id="user-info"
+        style="
+          position: relative;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 16px;
+          font-family: Arial, sans-serif;
+          color: #333;
+          text-align: center;
+          margin-bottom: 10px;
+          width: calc(
+            100% - 40px
+          ); /* Adjust this to fit within your container */
+          max-width: 600px; /* Optional: to limit the width */
+        "
+      ></div>
       <div
         id="countdown"
         style="font-size: 48px; text-align: center; display: none"
