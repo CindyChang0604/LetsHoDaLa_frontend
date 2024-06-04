@@ -24,7 +24,7 @@
         const username = localStorage.getItem("username");
         const room = localStorage.getItem("room");
         const isHost = localStorage.getItem("isHost") === "true";
-        let shouldWarn = true;  // 默认情况下显示提醒
+        //let shouldWarn = true;  // 默认情况下显示提醒
         console.log(typeof isHost, isHost);
 
         if (isHost) {
@@ -93,21 +93,21 @@
           shouldWarn = false;  // 设置标志为 false，不显示退出提醒
           window.location.href = target;
         });
-        window.addEventListener('popstate', function () {
-          if (!confirm('Are You Sure To Quit The Game?')) {
-            history.pushState(null, null, window.location.href);  // 恢復原狀
-          }
-        });
+        //window.addEventListener('popstate', function () {
+          //if (!confirm('Are You Sure To Quit The Game?')) {
+            //history.pushState(null, null, window.location.href);  // 恢復原狀
+          //}
+        //});
         
         // 初始化，防止在首次加載時即觸發popstate事件
         
-        window.addEventListener('beforeunload', function (e) {
-          e.preventDefault(); // 阻止默認行為
-          if (shouldWarn) {
-            e.returnValue = 'Are You Sure To Quit The Game?'; // 根據標準，設置 returnValue
-            return 'Are You Sure To Quit The Game?'; // 顯示的訊息
-          }
-        });
+        //window.addEventListener('beforeunload', function (e) {
+          //e.preventDefault(); // 阻止默認行為
+          //if (shouldWarn) {
+            //e.returnValue = 'Are You Sure To Quit The Game?'; // 根據標準，設置 returnValue
+            //return 'Are You Sure To Quit The Game?'; // 顯示的訊息
+          //}
+        //});
         };
     </script>
     <style>
