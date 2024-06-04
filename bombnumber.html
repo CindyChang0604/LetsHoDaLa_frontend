@@ -366,15 +366,7 @@
           max-width: 600px; /* Optional: to limit the width */
         "
       ></div>
-      <div
-        id="playing"
-        style="
-          font-size: 24px;
-          text-align: center;
-          display: none;
-          color: rgb(47, 47, 47);
-        "
-      ></div>
+      
       <img src="images\bombnumber.png" alt="bombnumber" id="bombnumber" />
       <h1 style="font-family: Roboto, sans-serif">BombNumber</h1>
       <button id="startGame">Start Game</button>
@@ -397,7 +389,16 @@
           "
           placeholder="Enter your guess"
         />
-        <button id="submitGuess">Submit Your Guess</button>
+        <div
+        id="playing"
+        style="
+          font-size: 24px;
+          text-align: center;
+          display: none;
+          color: rgb(47, 47, 47);
+        "
+      ></div>
+        <button id="submitGuess" style="display: none">Submit Your Guess</button>
       </div>
     </div>
     <div id="rulesPopup" class="popup" style="display: none">
